@@ -7,13 +7,15 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+            //map
+            this.map = this.add.image(0, 0, 'frog').setOrigin(0).setScale(2)
 
         keyMENU = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M)
 
         this.p1Score = 0
 
         //adding spider ex)
-        //this.spider = new Spider(this, 0, 180, 'larryIdle', 0).setOrigin(0, 0).setScale(2.2).setDepth(2)
+        this.spider = new Spider(this, centerX, centerY, 'spider', 0)
 
         //keys 
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W)
@@ -23,6 +25,10 @@ class Play extends Phaser.Scene {
 
         this.gameOver = false
 
+        //Setup camera to follow the spider
+        this.cameras.main.startFollow(this.spider)
+        this.cameras.main.setBounds(0, 0, this.map.displayWidth, this.map.displayHeight)
+        this.physics.world.setBounds(0, 0, this.map.displayWidth, this.map.displayHeight)
     }
 
     update() {
@@ -30,6 +36,10 @@ class Play extends Phaser.Scene {
         if (Phaser.Input.Keyboard.JustDown(keyMENU)) {
 
             this.scene.start('menuScene')    
+        }
+
+        if(!this.gameOver){
+            this.spider.update()
         }
     }
 
