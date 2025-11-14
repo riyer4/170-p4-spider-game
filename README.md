@@ -7,3 +7,9 @@ If the latter is the case, then we need to duplicate Play.js four times with dif
 This is just the general setup regarding scenes and stuff with placeholder text that we can replace later. I used an old phaser game of mine as the general layout, sooo you might see larry references here and there.
 
 Feel free to go at it, leave notes here or make a separate file idc.
+
+
+Reference:
+
+- music
+ - https://www.newgrounds.com/audio/listen/54469
