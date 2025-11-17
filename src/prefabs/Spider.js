@@ -1,52 +1,60 @@
 class Spider extends Phaser.GameObjects.Sprite {
     constructor(scene, x, y, key, frame) {
-        super(scene, x, y, key, frame)
+        super(scene, x, y, key, frame);
 
-        scene.add.existing(this)
-        scene.physics.add.existing(this)
+        scene.add.existing(this);
+        scene.physics.add.existing(this);
 
-        this.setScale(3)
+        this.setScale(3);
 
-        //set basic physics properties
+        // set basic physics properties
         this.moveSpeed = 300;
         this.body.setVelocity(0, 0);
         this.body.setCollideWorldBounds(true);
         this.body.setImmovable(true);
-
     }
 
     update() {
-        //Handle left movement
-        if(keyLEFT.isDown){
-            this.body.setVelocityX(-this.moveSpeed);
-            this.anims.play('moveLeft', true);
+        // diagonal movement checking
+        let vx = 0;
+        let vy = 0;
+
+        if (keyLEFT.isDown) {
+            vx = -this.moveSpeed;
+        } else if (keyRIGHT.isDown) {
+            vx = this.moveSpeed;
         }
-        //Handle right movement
-        else if(keyRIGHT.isDown){
-            this.body.setVelocityX(this.moveSpeed);
-            this.anims.play('moveRight', true);
+
+        if (keyUP.isDown) {
+            vy = -this.moveSpeed;
+        } else if (keyDOWN.isDown) {
+            vy = this.moveSpeed;
         }
-        else {
-            this.body.setVelocityX(0);
-        }
-        
-        //Handle up movement
-        if(keyUP.isDown){
-            this.body.setVelocityY(-this.moveSpeed);
-            this.anims.play('moveUp', true);
-        }
-        //Handle down movement
-        else if(keyDOWN.isDown){
-            this.body.setVelocityY(this.moveSpeed);
-            this.anims.play('moveDown', true);
-        }
-        else {
-            this.body.setVelocityY(0);
+
+        this.body.setVelocityX(vx);
+        this.body.setVelocityY(vy);
+
+        // check for movement
+        const moving = (vx !== 0) || (vy !== 0);
+
+        if (moving) {
+            let animKey = null;
+            if (vx < 0) animKey = 'moveLeft';
+            else if (vx > 0) animKey = 'moveRight';
+            else if (vy < 0) animKey = 'moveUp';
+            else if (vy > 0) animKey = 'moveDown';
+
+            if (animKey) {
+                this.anims.play(animKey, true);
+            }
+        } else {
+            // idle frame plays when movement stops
+            this.anims.stop();
+            this.setTexture('spider_ud', 0);
         }
     }
 
     reset() {
 
-        
     }
 }

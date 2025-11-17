@@ -15,7 +15,7 @@ class Play extends Phaser.Scene {
         this.p1Score = 0
 
         //adding spider ex)
-        this.spider = new Spider(this, centerX, centerY, 'spider', 0)
+        this.spider = new Spider(this, centerX, centerY, 'spider_ud', 0).setScale(0.7)
 
         //keys 
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W)

@@ -10,6 +10,8 @@ class Menu extends Phaser.Scene {
     
     // image + sprite loading
     this.load.spritesheet('spider', 'images/Spider.png', { frameWidth: 20, frameHeight: 20 });
+    this.load.spritesheet('spider_lr', 'images/spider_moving_l-r.png', { frameWidth: 186, frameHeight: 96 });
+    this.load.spritesheet('spider_ud', 'images/spider_moving_u-d.png', { frameWidth: 186, frameHeight: 96 });
     this.load.image('map', 'images/map.png');
     this.load.image('frog', 'images/frog.png');
     this.load.image('what', 'images/what.png');
@@ -73,7 +75,7 @@ class Menu extends Phaser.Scene {
         if(!this.anims.exists('moveUp')){
             this.anims.create({
                 key: 'moveUp',
-                frames: this.anims.generateFrameNumbers('spider', { start: 0, end: 0 }),
+                frames: this.anims.generateFrameNumbers('spider_ud', { start: 0, end: 2 }),
                 frameRate: 10,
                 repeat: -1
             });
@@ -81,7 +83,7 @@ class Menu extends Phaser.Scene {
         if(!this.anims.exists('moveDown')){
             this.anims.create({
                 key: 'moveDown',
-                frames: this.anims.generateFrameNumbers('spider', { start: 1, end: 1 }),
+                frames: this.anims.generateFrameNumbers('spider_ud', { start: 0, end: 2 }),
                 frameRate: 10,
                 repeat: -1
             });
@@ -89,7 +91,7 @@ class Menu extends Phaser.Scene {
         if(!this.anims.exists('moveRight')){
             this.anims.create({
                 key: 'moveRight',
-                frames: this.anims.generateFrameNumbers('spider', { start: 2, end: 2 }),
+                frames: this.anims.generateFrameNumbers('spider_lr', { start: 3, end: 5 }),
                 frameRate: 10,
                 repeat: -1
             });
@@ -97,7 +99,7 @@ class Menu extends Phaser.Scene {
         if(!this.anims.exists('moveLeft')){
             this.anims.create({
                 key: 'moveLeft',
-                frames: this.anims.generateFrameNumbers('spider', { start: 3, end: 3 }),
+                frames: this.anims.generateFrameNumbers('spider_lr', { start: 0, end: 2 }),
                 frameRate: 10,
                 repeat: -1
             });
