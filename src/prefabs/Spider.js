@@ -5,7 +5,7 @@ class Spider extends Phaser.GameObjects.Sprite {
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
-        this.setScale(3);
+        this.setScale(0.5);
 
         // set basic physics properties
         this.moveSpeed = 300;
