@@ -9,9 +9,10 @@ class Menu extends Phaser.Scene {
     this.load.path = './assets/';
     
     // image + sprite loading
-    this.load.spritesheet('spider', 'images/Spider.png', { frameWidth: 20, frameHeight: 20 });
     this.load.spritesheet('spider_lr', 'images/spider_moving_l-r.png', { frameWidth: 186, frameHeight: 96 });
     this.load.spritesheet('spider_ud', 'images/spider_moving_u-d.png', { frameWidth: 186, frameHeight: 96 });
+    this.load.spritesheet('spider_eating', 'images/spider_eating.png', { frameWidth: 186, frameHeight: 96 });
+    this.load.spritesheet('fly', 'images/fly.png', { frameWidth: 26, frameHeight: 20 });
     this.load.image('map', 'images/map.png');
     this.load.image('frog', 'images/frog.png');
     this.load.image('what', 'images/what.png');
@@ -100,6 +101,14 @@ class Menu extends Phaser.Scene {
             this.anims.create({
                 key: 'moveLeft',
                 frames: this.anims.generateFrameNumbers('spider_lr', { start: 0, end: 2 }),
+                frameRate: 10,
+                repeat: -1
+            });
+        }
+        if(!this.anims.exists('eat')){
+            this.anims.create({
+                key: 'eat',
+                frames: this.anims.generateFrameNumbers('spider_eating', { start: 0, end: 2 }),
                 frameRate: 10,
                 repeat: -1
             });
