@@ -46,7 +46,7 @@ class Play extends Phaser.Scene {
         }
 
         //Add Stamina Bar
-        this.maxStamina = 100;
+        this.maxStamina = 200;
         this.stamina = this.maxStamina;
         this.staminaBarBG = this.add.rectangle(0, 0, 160, 20, 0x000000).setScrollFactor(0).setOrigin(1, 0);
         this.staminaBar = this.add.rectangle(0, 0, 158, 18, 0x00ff00).setScrollFactor(0).setOrigin(1, 0);
@@ -61,7 +61,7 @@ class Play extends Phaser.Scene {
 
             this.scene.start('menuScene')    
         }
-        if (this.flies.length === 0) {
+        if (this.flies.length === 0 || this.stamina <= 0) {
             this.scene.start('endScene')
         }
 
@@ -112,6 +112,7 @@ class Play extends Phaser.Scene {
                 }
                 this.currentPrey = null;
                 this.spider.stop_eating();
+                this.stamina += 10;
             }
         } else {
             if (this.currentPrey) {
