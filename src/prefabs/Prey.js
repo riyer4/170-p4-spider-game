@@ -11,11 +11,17 @@ class Prey extends Phaser.GameObjects.Sprite {
         this.body.setVelocity(0, 0);
         this.body.setCollideWorldBounds(true);
         this.body.setImmovable(false);
-
+        
+        this.been_eaten = false;
 
     }
 
     update() {
+        if (this.been_eaten) {
+            this.body.setVelocity(0, 0);
+            return;
+        }
+        
         // Change direction randomly every 2 seconds
         if (!this.moveTimer) {
             this.moveTimer = this.scene.time.addEvent({
@@ -32,6 +38,15 @@ class Prey extends Phaser.GameObjects.Sprite {
         }
         
         this.body.setVelocityX(this.direction * this.moveSpeed);
+    }
+    
+    stopMoving() {
+        this.been_eaten = true;
+        this.body.setVelocity(0, 0);
+    }
+    
+    resumeMoving() {
+        this.been_eaten = false;
     }
 
     changeDirection() {

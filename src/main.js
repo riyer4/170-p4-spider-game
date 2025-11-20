@@ -21,7 +21,7 @@ let centerX = game.config.width / 2
 let centerY = game.config.height / 2
 
 // keyboard bindings if needed (I used these in my other phaser projects lol)
-let keyLEFT, keyRIGHT, keyUP, keyDOWN, keySTART, keyCREDITS, keyCONTROLS, keyMENU, keyMUTE
+let keyLEFT, keyRIGHT, keyUP, keyDOWN, keySTART, keyCREDITS, keyCONTROLS, keyMENU, keyMUTE, keyEAT
 
 // UI sizes!!
 

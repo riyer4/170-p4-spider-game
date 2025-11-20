@@ -25,7 +25,8 @@ class End extends Phaser.Scene {
             fixedWidth: 0
         }
 
-        this.add.text(320, 400, '[M] -> Menu', controlsConfig).setOrigin(0.5)
+        this.add.text(centerX, centerY, '[M] -> Menu', controlsConfig).setOrigin(0.5)
+        this.add.text(centerX, centerY-200, 'Game Over', controlsConfig).setOrigin(0.5).setScale(5)
 
     }
 
