@@ -44,6 +44,15 @@ class Play extends Phaser.Scene {
             let fly = new Prey(this, randomX, randomY, 'fly', 0, 10);
             this.flies.push(fly);
         }
+
+        //Add Stamina Bar
+        this.maxStamina = 100;
+        this.stamina = this.maxStamina;
+        this.staminaBarBG = this.add.rectangle(0, 0, 160, 20, 0x000000).setScrollFactor(0).setOrigin(1, 0);
+        this.staminaBar = this.add.rectangle(0, 0, 158, 18, 0x00ff00).setScrollFactor(0).setOrigin(1, 0);
+        this.staminaBarBG.setPosition(this.cameras.main.width - 10, 10);
+        this.staminaBar.setPosition(this.cameras.main.width - 11, 11);
+        this.staminaDrainRate = 5;
     }
 
     update() {
@@ -64,6 +73,10 @@ class Play extends Phaser.Scene {
             for (let i = 0; i < this.flies.length; i++) {
                 this.flies[i].update();
             }
+
+            // Update stamina bar
+            this.stamina = Math.max(0, this.stamina - this.staminaDrainRate * this.game.loop.delta / 1000);
+            this.staminaBar.width = (this.stamina / this.maxStamina) * 158;
         }
     }
 
