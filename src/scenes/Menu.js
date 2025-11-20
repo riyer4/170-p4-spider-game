@@ -9,9 +9,9 @@ class Menu extends Phaser.Scene {
     this.load.path = './assets/';
     
     // image + sprite loading
-    this.load.spritesheet('spider_lr', 'images/spider_moving_l-r.png', { frameWidth: 186, frameHeight: 96 });
-    this.load.spritesheet('spider_ud', 'images/spider_moving_u-d.png', { frameWidth: 186, frameHeight: 96 });
-    this.load.spritesheet('spider_eating', 'images/spider_eating.png', { frameWidth: 186, frameHeight: 96 });
+    this.load.spritesheet('spider_lr', 'images/spider_moving_l-r.PNG', { frameWidth: 186, frameHeight: 96 });
+    this.load.spritesheet('spider_ud', 'images/spider_moving_u-d.PNG', { frameWidth: 186, frameHeight: 96 });
+    this.load.spritesheet('spider_eating', 'images/spider_eating.PNG', { frameWidth: 186, frameHeight: 96 });
     this.load.spritesheet('fly', 'images/fly.png', { frameWidth: 26, frameHeight: 20 });
     this.load.image('map', 'images/map.png');
     this.load.image('frog', 'images/frog.png');
