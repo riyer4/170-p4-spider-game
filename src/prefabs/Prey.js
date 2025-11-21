@@ -13,7 +13,6 @@ class Prey extends Phaser.GameObjects.Sprite {
         this.body.setImmovable(false);
         
         this.been_eaten = false;
-
     }
 
     update() {
@@ -40,12 +39,12 @@ class Prey extends Phaser.GameObjects.Sprite {
         this.body.setVelocityX(this.direction * this.moveSpeed);
     }
     
-    stopMoving() {
+    capture() {
         this.been_eaten = true;
         this.body.setVelocity(0, 0);
     }
     
-    resumeMoving() {
+    release() {
         this.been_eaten = false;
     }
 
@@ -56,6 +55,10 @@ class Prey extends Phaser.GameObjects.Sprite {
         } else {
             this.direction = 1; // right
         }
+    }
+
+    kill() {
+        this.scene.preyManager.killFly(this);
     }
 
     reset() {

@@ -14,31 +14,66 @@ class Spider extends Phaser.GameObjects.Sprite {
         this.body.setImmovable(true);
         
         this.isEating = false;
+
+        // Variables for eating fly
+        this.currentPrey = null;
+        this.flyEatingDuration = 1000;  // press j for 1 second to eat the fly
     }
 
     update() {
-        // diagonal movement checking
+        this.moveUpdate();
+        this.interactUpdate();
+        this.eatingUpdate();
+    }
+
+    moveUpdate() {
+
+        if (this.isEating) return;
+
+        // movement checking
         let vx = 0;
         let vy = 0;
 
         if (keyLEFT.isDown) {
-            vx = -this.moveSpeed;
+            vx = -1;
         } else if (keyRIGHT.isDown) {
-            vx = this.moveSpeed;
+            vx = 1;
         }
 
         if (keyUP.isDown) {
-            vy = -this.moveSpeed;
+            vy = -1;
         } else if (keyDOWN.isDown) {
-            vy = this.moveSpeed;
+            vy = 1;
         }
 
-        this.body.setVelocityX(vx);
-        this.body.setVelocityY(vy);
-        
-        if (this.isEating) {
-            return;
+        let newVelo = new Phaser.Math.Vector2(vx, vy);
+        newVelo = newVelo.normalize();
+
+        this.body.setVelocity(newVelo.x * this.moveSpeed, newVelo.y * this.moveSpeed);
+
+        // Enforce circular boundary (I generated this with GPT but the math is straightforward)
+        const dx = this.x - this.scene.worldCenterX;
+        const dy = this.y - this.scene.worldCenterY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        let radius = this.scene.web.radius;
+
+        if (dist > radius) {
+            // Compute outward vector (normal)
+            const nx = dx / dist;
+            const ny = dy / dist;
+
+            // Remove outward component of velocity (keep tangential + inward)
+            const dot = this.body.velocity.x * nx +
+                        this.body.velocity.y * ny;
+
+            if (dot > 0) {
+                // Subtract the outward part only
+                this.body.velocity.x -= dot * nx;
+                this.body.velocity.y -= dot * ny;
+            }
         }
+        
         // check for movement
         const moving = (vx !== 0) || (vy !== 0);
 
@@ -58,13 +93,46 @@ class Spider extends Phaser.GameObjects.Sprite {
             this.setTexture('spider_ud', 0);
         }
     }
+
+    interactUpdate() {
+        if (Phaser.Input.Keyboard.JustDown(keyINTERACT)) {
+            this.scene.interactCheck();
+        }
+    }
+
+    triggerEating(collidingFly) {
+        
+        this.currentPrey = collidingFly;
+        collidingFly.capture();
+        this.startEating();
+    }
+
+    eatingUpdate() {
+
+        if (!this.isEating) return;
+
+        // If the eating button has been held down longer than the required duration, kill the fly
+        if (keyINTERACT.getDuration() >= this.flyEatingDuration) {
+            this.currentPrey.kill();
+            this.currentPrey = null;
+            this.stopEating();
+        }
+
+        // If the key is not being held down anymore, release the fly
+        else if (!keyINTERACT.isDown) {
+            this.currentPrey.release();
+            this.currentPrey = null;
+            this.stopEating();
+        }
+    }
     
-    play_eating() {
+    startEating() {
         this.isEating = true;
+        this.body.setVelocity(0, 0);
         this.anims.play('eat', true);
     }
     
-    stop_eating() {
+    stopEating() {
         this.isEating = false;
         this.anims.stop();
         this.setTexture('spider_ud', 0);
