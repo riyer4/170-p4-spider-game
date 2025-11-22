@@ -3,11 +3,14 @@ class PreyManager extends Phaser.GameObjects.GameObject {
         super(scene);
         scene.add.existing(this);
 
-        // Create 10 flies at random positions
+        // Create 10 flies at random positions within web range
         this.flies = [];
         for (let i = 0; i < 10; i++) {
-            let randomX = Phaser.Math.Between(50, scene.worldWidth - 50);
-            let randomY = Phaser.Math.Between(50, scene.worldHeight - 50);
+            // Generate random position within web circle
+            let angle = Phaser.Math.FloatBetween(0, Math.PI * 2);
+            let distance = Phaser.Math.FloatBetween(0, scene.web.radius * 0.8); // keep flies within web range, like, it won't spawn on the edge of the web.
+            let randomX = scene.worldCenterX + Math.cos(angle) * distance;
+            let randomY = scene.worldCenterY + Math.sin(angle) * distance;
 
             let fly = new Prey(scene, randomX, randomY, 'fly', 0, 10);
             this.flies.push(fly);
