@@ -1,0 +1,7 @@
+/* style.css */
+@font-face {
+    font-family: "WeberSpider";             
+    src: url("assets/fonts/WEBER SPIDER.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}

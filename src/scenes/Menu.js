@@ -7,7 +7,7 @@ class Menu extends Phaser.Scene {
 
         // for bg ex)
         // this.mainScreen = this.add.tileSprite(0, 0, 640, 480, 'menu').setOrigin(0, 0)
-        this.add.image(0, 0, 'what').setOrigin(0).setScale(2)
+        // this.add.image(0, 0, 'what').setOrigin(0).setScale(2)
         
         // Check if sound already exists to avoid creating duplicates
         if (!this.sound.get('background1')) {
