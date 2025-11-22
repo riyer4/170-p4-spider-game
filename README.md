@@ -11,5 +11,9 @@ Feel free to go at it, leave notes here or make a separate file idc.
 
 Reference:
 
-- music
- - https://www.newgrounds.com/audio/listen/54469
+music
+    - https://www.newgrounds.com/audio/listen/54469
+
+fonts
+    - https://www.dafont.com/capitol-city.font
+    - https://www.dafont.com/weber-spider.font

@@ -13,6 +13,15 @@ class Prey extends Phaser.GameObjects.Sprite {
         this.body.setImmovable(false);
         
         this.been_eaten = false;
+        
+        // Store spawn position for struggle range
+        this.spawnX = x;
+        this.spawnY = y;
+        this.struggleRange = 20;
+        
+        // Target position within struggle range
+        this.targetX = x;
+        this.targetY = y;
     }
 
     update() {
@@ -21,22 +30,31 @@ class Prey extends Phaser.GameObjects.Sprite {
             return;
         }
         
-        // Change direction randomly every 2 seconds
+        // Change target position randomly within struggle range every 1-2 seconds
         if (!this.moveTimer) {
             this.moveTimer = this.scene.time.addEvent({
-                delay: 2000,
-                callback: this.changeDirection,
+                delay: Phaser.Math.Between(1000, 2000),
+                callback: this.setNewTarget,
                 callbackScope: this,
                 loop: true
             });
-            this.changeDirection();
+            this.setNewTarget();
         }
         
-        if (this.body.blocked.left || this.body.blocked.right) {
-            this.direction *= -1;
-        }
+        // Move towards target position
+        let dx = this.targetX - this.x;
+        let dy = this.targetY - this.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
         
-        this.body.setVelocityX(this.direction * this.moveSpeed);
+        if (distance > 5) {
+            // Normalize direction and set velocity
+            let vx = (dx / distance) * this.moveSpeed;
+            let vy = (dy / distance) * this.moveSpeed;
+            this.body.setVelocity(vx, vy);
+        } else {
+            // Reached target, stop moving
+            this.body.setVelocity(0, 0);
+        }
     }
     
     capture() {
@@ -48,13 +66,12 @@ class Prey extends Phaser.GameObjects.Sprite {
         this.been_eaten = false;
     }
 
-    changeDirection() {
-        let randomNumber = Phaser.Math.Between(0, 1);
-        if (randomNumber === 0) {
-            this.direction = -1; // left
-        } else {
-            this.direction = 1; // right
-        }
+    setNewTarget() {
+        // Set a new random target position within struggle range
+        let angle = Phaser.Math.FloatBetween(0, Math.PI * 2);
+        let distance = Phaser.Math.FloatBetween(0, this.struggleRange);
+        this.targetX = this.spawnX + Math.cos(angle) * distance;
+        this.targetY = this.spawnY + Math.sin(angle) * distance;
     }
 
     kill() {

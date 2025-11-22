@@ -9,27 +9,33 @@ class Controls extends Phaser.Scene {
 
         // placeholder text
 
-        let controlsConfig = {
-            fontFamily: 'Times New Roman',
-            fontSize: '18px',
-            backgroundColor: '#089cd7ff',
-            color: '#fff',
-            allig: 'right',
-            padding: {
-                top: 5,
-                bottom: 5,
-            },
-
+        // Button configuration without background color
+        let buttonConfig = {
+            fontFamily: 'CapitolCity',
+            fontSize: '32px',
+            color: '#ffffff',
+            align: 'center',
             fixedWidth: 0
         }
 
-        this.add.text(400, 600, '[M] -> Menu', controlsConfig).setOrigin(0.5)
+        // Create Menu button
+        let menuButton = this.add.text(centerX, 600, 'BACK TO MENU', buttonConfig).setOrigin(0.5)
+        menuButton.setInteractive({ useHandCursor: true })
+        menuButton.on('pointerover', () => menuButton.setStyle({ color: '#ff901f' }))
+        menuButton.on('pointerout', () => menuButton.setStyle({ color: '#ffffff' }))
+        menuButton.on('pointerdown', () => this.scene.start('menuScene'))
 
-        controlsConfig.fontSize = '25px'
-        controlsConfig.backgroundColor = ''
+        // Text configuration for instructions
+        let textConfig = {
+            fontFamily: 'CapitolCity',
+            fontSize: '25px',
+            color: '#ffffff',
+            align: 'center',
+            fixedWidth: 0
+        }
 
-        this.add.text(400, 180, 'Press Arrow Keys keys to move', controlsConfig).setOrigin(0.5);
-        this.add.text(400, 230, '[Z] to interact with objects', controlsConfig).setOrigin(0.5);
+        this.add.text(centerX, 180, 'Press Arrow Keys keys to move', textConfig).setOrigin(0.5);
+        this.add.text(centerX, 230, '[Z] to interact with objects', textConfig).setOrigin(0.5);
     }
 
     update() {

@@ -37,14 +37,35 @@ class Menu extends Phaser.Scene {
             color: "#ffffff"
         }).setOrigin(0.5);
 
-        this.add.text(200, 600, '[SPACE] to Start', menuConfig).setOrigin(0.5)
-        menuConfig.backgroundColor = '#ff901f'
-        this.add.text(400, 600, '[C] for Controls', menuConfig).setOrigin(0.5)
-        menuConfig.backgroundColor = '#ff5f85'
-        this.add.text(600, 600, '[X] for Credits', menuConfig).setOrigin(0.5)
-        menuConfig.backgroundColor = '#ff5f85'
-        this.add.text(200, 700, '[U] to Mute', menuConfig).setOrigin(0.5)
-        menuConfig.backgroundColor = '#ff901f'
+        // Button configuration without background color
+        let buttonConfig = {
+            fontFamily: 'CapitolCity',
+            fontSize: '30px',
+            color: '#ffffff',
+            align: 'center',
+            fixedWidth: 0
+        }
+
+        // Create Start button
+        let startButton = this.add.text(centerX, centerY, 'Start', buttonConfig).setOrigin(0.5)
+        startButton.setInteractive({ useHandCursor: true })
+        startButton.on('pointerover', () => startButton.setStyle({ color: '#ff901f' }))
+        startButton.on('pointerout', () => startButton.setStyle({ color: '#ffffff' }))
+        startButton.on('pointerdown', () => this.scene.start('playScene'))
+
+        // Create Controls button
+        let controlsButton = this.add.text(centerX, centerY+100, 'Controls', buttonConfig).setOrigin(0.5)
+        controlsButton.setInteractive({ useHandCursor: true })
+        controlsButton.on('pointerover', () => controlsButton.setStyle({ color: '#ff901f' }))
+        controlsButton.on('pointerout', () => controlsButton.setStyle({ color: '#ffffff' }))
+        controlsButton.on('pointerdown', () => this.scene.start('controlsScene'))
+
+        // Create Credits button
+        let creditsButton = this.add.text(centerX, centerY+200, 'Credits', buttonConfig).setOrigin(0.5)
+        creditsButton.setInteractive({ useHandCursor: true })
+        creditsButton.on('pointerover', () => creditsButton.setStyle({ color: '#ff5f85' }))
+        creditsButton.on('pointerout', () => creditsButton.setStyle({ color: '#ffffff' }))
+        creditsButton.on('pointerdown', () => this.scene.start('creditsScene'))
 
         //keys
         keyCONTROLS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C)

@@ -5,3 +5,10 @@
     font-weight: normal;
     font-style: normal;
 }
+
+@font-face {
+    font-family: "CapitolCity";             
+    src: url("assets/fonts/capitolcity.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
