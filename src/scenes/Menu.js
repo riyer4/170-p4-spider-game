@@ -35,8 +35,15 @@ class Menu extends Phaser.Scene {
         // for bg ex)
         // this.mainScreen = this.add.tileSprite(0, 0, 640, 480, 'menu').setOrigin(0, 0)
         this.add.image(0, 0, 'what').setOrigin(0).setScale(2)
-        this.background1 = this.sound.add('background1', {volume: 0.5, loop: true})
+        
+        // Check if sound already exists to avoid creating duplicates
+        if (!this.sound.get('background1')) {
+            this.background1 = this.sound.add('background1', {volume: 0.5, loop: true})
+        } else {
+            this.background1 = this.sound.get('background1')
+        }
         //this.background1.play()
+        
         //placeholder menu text
 
         let menuConfig = {
@@ -52,6 +59,11 @@ class Menu extends Phaser.Scene {
 
             fixedWidth: 0
         }
+        this.add.text(centerX, centerY-300, "SPIDER", {
+            fontFamily: "WeberSpider",   
+            fontSize: "100px",
+            color: "#ffffff"
+        }).setOrigin(0.5);
 
         this.add.text(200, 600, '[SPACE] to Start', menuConfig).setOrigin(0.5)
         menuConfig.backgroundColor = '#ff901f'
