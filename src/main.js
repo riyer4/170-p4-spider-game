@@ -13,7 +13,7 @@ let config = {
             debug: true,
         }
     },
-    scene: [ Menu, Controls, Credits, Play, End ]
+    scene: [ Load, Menu, Controls, Credits, Play, End, Minigame ]
 }
 
 let game = new Phaser.Game(config)
@@ -21,7 +21,7 @@ let centerX = game.config.width / 2
 let centerY = game.config.height / 2
 
 // keyboard bindings if needed (I used these in my other phaser projects lol)
-let keyLEFT, keyRIGHT, keyUP, keyDOWN, keySTART, keyCREDITS, keyCONTROLS, keyMENU, keyMUTE, keyEAT
+let keyLEFT, keyRIGHT, keyUP, keyDOWN, keySTART, keyCREDITS, keyCONTROLS, keyMENU, keyMUTE, keyINTERACT
 
 // UI sizes!!
 

@@ -1,129 +1,79 @@
 
-
 class Play extends Phaser.Scene {
     constructor () {
         super("playScene")
 
+        this.worldWidth = 1000;
+        this.worldHeight = 1000;
+        this.worldCenterX = this.worldWidth / 2;
+        this.worldCenterY = this.worldHeight / 2;
     }
 
     create() {
-            //map
-            this.map = this.add.image(0, 0, 'frog').setOrigin(0).setScale(2)
-
-        keyMENU = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M)
-
-        this.p1Score = 0
-
-        //adding spider ex)
-        this.spider = new Spider(this, centerX, centerY, 'spider_ud', 0)
-
-        //keys 
-        keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W)
-        keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A)
-        keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S)
-        keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
-        keyEAT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J)
-
-        this.gameOver = false
         
-        // Variables for eating fly
-        this.currentPrey = null;
-        this.eatingStartTime = 0;
-        this.eating_fly = 1000;  // press j for 1 second to eat the fly
+        // Background map
+        this.map = this.add.image(0, 0, 'blue_square').setOrigin(0).setScale(50);
 
-        //Setup camera to follow the spider
+        this.score = 0;
+        this.gameOver = false;
+
+        this.web = new Web(this, this.worldCenterX, this.worldCenterY, 'web', 0);
+        this.preyManager = new PreyManager(this);
+        this.spider = new Spider(this, this.worldCenterX, this.worldCenterY, 'spider_ud', 0);
+        this.staminaBar = new StaminaBar(this);
+
+        // Keys 
+        keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+        keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+        keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+        keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+        keyINTERACT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
+        keyMENU = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
+
+        // Setup camera to follow the spider
         this.cameras.main.startFollow(this.spider)
-        this.cameras.main.setBounds(0, 0, this.map.displayWidth, this.map.displayHeight)
-        this.physics.world.setBounds(0, 0, this.map.displayWidth, this.map.displayHeight)
+        this.cameras.main.setBounds(0, 0, this.worldWidth, this.worldHeight)
 
-        // Create 10 flies at random positions
-        this.flies = [];
-        for (let i = 0; i < 10; i++) {
-            let randomX = Phaser.Math.Between(50, this.map.displayWidth - 50);
-            let randomY = Phaser.Math.Between(50, this.map.displayHeight - 50);
-            let fly = new Prey(this, randomX, randomY, 'fly', 0, 10);
-            this.flies.push(fly);
-        }
-
-        //Add Stamina Bar
-        this.maxStamina = 100;
-        this.stamina = this.maxStamina;
-        this.staminaBarBG = this.add.rectangle(0, 0, 160, 20, 0x000000).setScrollFactor(0).setOrigin(1, 0);
-        this.staminaBar = this.add.rectangle(0, 0, 158, 18, 0x00ff00).setScrollFactor(0).setOrigin(1, 0);
-        this.staminaBarBG.setPosition(this.cameras.main.width - 10, 10);
-        this.staminaBar.setPosition(this.cameras.main.width - 11, 11);
-        this.staminaDrainRate = 5;
+        this.physics.world.setBounds(0, 0, this.worldWidth, this.worldHeight)
     }
 
     update() {
 
         if (Phaser.Input.Keyboard.JustDown(keyMENU)) {
-
             this.scene.start('menuScene')    
         }
-        if (this.flies.length === 0) {
-            this.scene.start('endScene')
-        }
+
+        this.staminaBar.update();
 
         if(!this.gameOver){
             this.spider.update()
-            this.handleFlyEating()
-            
-            // Update all flies
-            for (let i = 0; i < this.flies.length; i++) {
-                this.flies[i].update();
-            }
-
-            // Update stamina bar
-            this.stamina = Math.max(0, this.stamina - this.staminaDrainRate * this.game.loop.delta / 1000);
-            this.staminaBar.width = (this.stamina / this.maxStamina) * 158;
+            this.preyManager.update();
         }
     }
 
-    handleFlyEating() {
-        // Check for collision with flies
-        let collidingFly = null;
-        for (let i = 0; i < this.flies.length; i++) {
-            if (this.checkCollision(this.spider, this.flies[i])) {
-                collidingFly = this.flies[i];
-                break;
-            }
-        }
-        
-        // Handle eating logic
-        if (collidingFly && keyEAT.isDown) {
-            // If this is a new fly being eaten, start the timer
-            if (this.currentPrey !== collidingFly) {
-                this.currentPrey = collidingFly;
-                this.eatingStartTime = this.time.now;
-                collidingFly.stopMoving();
-                this.spider.play_eating();
-            }
-            
-            // Check if we've held J for 1 second
-            if (this.time.now - this.eatingStartTime >= this.eating_fly) {
-                // Remove the fly from the array
-                let index = this.flies.indexOf(collidingFly);
-                if (index > -1) {
-                    collidingFly.destroy();
-                    this.flies.splice(index, 1);
-                    this.p1Score += collidingFly.points;
-                    console.log("fly eaten! score: " + this.p1Score);
-                }
-                this.currentPrey = null;
-                this.spider.stop_eating();
-            }
-        } else {
-            if (this.currentPrey) {
-                this.currentPrey.resumeMoving();
-                this.currentPrey = null;
-                this.spider.stop_eating();
-            }
-        }
+    endGame() {
+        this.gameOver = true;
+        this.scene.start('endScene');
     }
 
-    checkCollision(spider, prey) {
-        return this.physics.overlap(spider, prey);
+    interactCheck() {
+        let prey = this.preyManager.checkCollision(this.spider);
+        if (prey) this.spider.triggerEating(prey);
     }
 
+    growWeb() {
+        this.web.grow();
+    }
+
+    startMinigame() {
+        this.scene.sleep();
+        this.scene.launch('minigameScene');
+        let minigameScene = this.scene.get('minigameScene');
+        minigameScene.setStamina(stamina);
+    }
+
+    addScore(val) {
+        this.score += val;
+        console.log("New score: " + this.score);
+    }
 }

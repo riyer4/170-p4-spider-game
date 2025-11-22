@@ -28,11 +28,8 @@ class Controls extends Phaser.Scene {
         controlsConfig.fontSize = '25px'
         controlsConfig.backgroundColor = ''
 
-        this.add.text(400, 180, 'Press the WASD keys to move', controlsConfig).setOrigin(0.5)
-        this.add.text(400, 230, '[E] to interact with objects', controlsConfig).setOrigin(0.5)
-        this.add.text(400, 280, '[C] to collect items', controlsConfig).setOrigin(0.5)
-
-
+        this.add.text(400, 180, 'Press Arrow Keys keys to move', controlsConfig).setOrigin(0.5);
+        this.add.text(400, 230, '[Z] to interact with objects', controlsConfig).setOrigin(0.5);
     }
 
     update() {

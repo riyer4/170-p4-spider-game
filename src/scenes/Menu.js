@@ -3,33 +3,6 @@ class Menu extends Phaser.Scene {
         super("menuScene")
     }
 
-    
-    preload() {
-    //asset folder path
-    this.load.path = './assets/';
-    
-    // image + sprite loading
-    this.load.spritesheet('spider_lr', 'images/spider_moving_l-r.png', { frameWidth: 186, frameHeight: 96 });
-    this.load.spritesheet('spider_ud', 'images/spider_moving_u-d.png', { frameWidth: 186, frameHeight: 96 });
-    this.load.spritesheet('spider_eating', 'images/spider_eating.png', { frameWidth: 186, frameHeight: 96 });
-    this.load.spritesheet('fly', 'images/fly.png', { frameWidth: 26, frameHeight: 20 });
-    this.load.image('map', 'images/map.png');
-    this.load.image('frog', 'images/frog.png');
-    this.load.image('what', 'images/what.png');
-
-
-    // for menu
-
-        // ex) this.load.image('menu', './assets/png/menu.png')
-
-    //audio!!
-
-        // ex) this.load.audio('bgm', './assets/audio/ltl_music.wav')
-    this.load.audio('background1', 'audios/background1.mp3')
-
-    }
-
-
     create() {
 
         // for bg ex)
@@ -45,7 +18,6 @@ class Menu extends Phaser.Scene {
         //this.background1.play()
         
         //placeholder menu text
-
         let menuConfig = {
             fontFamily: 'Times New Roman',
             fontSize: '18px',
@@ -75,73 +47,26 @@ class Menu extends Phaser.Scene {
         menuConfig.backgroundColor = '#ff901f'
 
         //keys
-
         keyCONTROLS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C)
         keyCREDITS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X)
         keySTART = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
         keyMUTE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.U)
         
         // Track mute state
-        this.isMuted = false
-
-        // Create Spider animations
-        if(!this.anims.exists('moveUp')){
-            this.anims.create({
-                key: 'moveUp',
-                frames: this.anims.generateFrameNumbers('spider_ud', { start: 0, end: 2 }),
-                frameRate: 10,
-                repeat: -1
-            });
-        }
-        if(!this.anims.exists('moveDown')){
-            this.anims.create({
-                key: 'moveDown',
-                frames: this.anims.generateFrameNumbers('spider_ud', { start: 0, end: 2 }),
-                frameRate: 10,
-                repeat: -1
-            });
-        }
-        if(!this.anims.exists('moveRight')){
-            this.anims.create({
-                key: 'moveRight',
-                frames: this.anims.generateFrameNumbers('spider_lr', { start: 3, end: 5 }),
-                frameRate: 10,
-                repeat: -1
-            });
-        }
-        if(!this.anims.exists('moveLeft')){
-            this.anims.create({
-                key: 'moveLeft',
-                frames: this.anims.generateFrameNumbers('spider_lr', { start: 0, end: 2 }),
-                frameRate: 10,
-                repeat: -1
-            });
-        }
-        if(!this.anims.exists('eat')){
-            this.anims.create({
-                key: 'eat',
-                frames: this.anims.generateFrameNumbers('spider_eating', { start: 0, end: 2 }),
-                frameRate: 10,
-                repeat: -1
-            });
-        }
+        this.isMuted = false;
     }
     
     update() {
 
-
         if (Phaser.Input.Keyboard.JustDown(keySTART)) {
-            
             this.scene.start('playScene')    
         }
 
         if (Phaser.Input.Keyboard.JustDown(keyCONTROLS)) {
-
             this.scene.start('controlsScene')    
         }
 
         if (Phaser.Input.Keyboard.JustDown(keyCREDITS)) {
-
             this.scene.start('creditsScene')    
         }
 
