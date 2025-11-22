@@ -12,11 +12,11 @@ class Load extends Phaser.Scene {
         this.load.spritesheet('spider_lr', 'images/spider-moving-lr.png', { frameWidth: 186, frameHeight: 96 });
         this.load.spritesheet('spider_ud', 'images/spider-moving-ud.png', { frameWidth: 186, frameHeight: 96 });
         this.load.spritesheet('spider_eating', 'images/spider-eating.png', { frameWidth: 186, frameHeight: 96 });
-        this.load.spritesheet('web', 'images/web-placeholder.png', { frameWidth: 186, frameHeight: 96 });
+        this.load.spritesheet('web', 'images/web-placeholder.png', { frameWidth: 66, frameHeight: 66 });
         this.load.spritesheet('fly', 'images/fly.png', { frameWidth: 26, frameHeight: 20 });
-        this.load.image('map', 'images/map.png');
-        this.load.image('frog', 'images/frog.png');
-        this.load.image('what', 'images/what.png');
+        // this.load.image('map', 'images/map.png');
+        // this.load.image('frog', 'images/frog.png');
+        // this.load.image('what', 'images/what.png');
         this.load.image('blue_square', 'images/blue-square.png');
 
         //audio
