@@ -4,9 +4,9 @@ class StaminaBar extends Phaser.GameObjects.GameObject {
         scene.add.existing(this);
 
         //Add Stamina Bar
-        this.maxStamina = 200;
+        this.maxStamina = 100;
         this.stamina = this.maxStamina;
-        this.staminaDrainRate = 5;
+        this.staminaDrainRate = 2;
 
         this.staminaBarBG = scene.add.rectangle(0, 0, 160, 20, 0x000000).setScrollFactor(0).setOrigin(1, 0);
         this.staminaBar = scene.add.rectangle(0, 0, 158, 18, 0x00ff00).setScrollFactor(0).setOrigin(1, 0);
@@ -25,6 +25,6 @@ class StaminaBar extends Phaser.GameObjects.GameObject {
     }
 
     addStamina(val) {
-        this.stamina += val;
+        this.stamina = Math.min(this.stamina + val, this.maxStamina);
     }
 }

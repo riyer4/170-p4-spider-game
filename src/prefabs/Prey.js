@@ -24,9 +24,15 @@ class Prey extends Phaser.GameObjects.Sprite {
         // Target position within struggle range
         this.targetX = x;
         this.targetY = y;
+
+        this.isAlive = false;
     }
 
     update() {
+        if (!this.isAlive) {
+            return;
+        }
+
         if (this.isCaptured) {
             let currentTime = this.scene.time.now;
             if (currentTime - this.captureTime >= this.escape_time) {
@@ -95,6 +101,25 @@ class Prey extends Phaser.GameObjects.Sprite {
 
     kill() {
         this.scene.preyManager.killFly(this);
+    }
+
+    setAlive(alive) {
+        this.visible = alive;
+        this.isAlive = alive;
+        this.setActive(alive);
+        this.body.enable = alive;
+    }
+
+    setPosition(x, y) {
+        this.x = x;
+        this.y = y;
+        this.spawnX = x;
+        this.spawnY = y;
+        this.targetX = x;
+        this.targetY = y;
+
+        this.isCaptured = false;
+        this.captureTime = 0;
     }
 
     reset() {

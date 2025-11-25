@@ -10,7 +10,7 @@ class Spider extends Phaser.GameObjects.Sprite {
         this.maxScale = 0.8;
 
         // set basic physics properties
-        this.moveSpeed = 300;
+        
         this.body.setVelocity(0, 0);
         this.body.setCollideWorldBounds(true);
         this.body.setImmovable(true);
@@ -21,6 +21,14 @@ class Spider extends Phaser.GameObjects.Sprite {
         // Variables for capturing and eating fly
         this.currentPrey = null;
         this.flyCaptureDuration = 1000;  // press Z for 1 second to capture the fly
+
+        this.age = 0;
+        this.decayFactor = 0.9
+        this.decayDropRate = 0.01;
+        this.minSpeed = 50;
+        this.minSpeedDropRate = 0.01;
+        this.maxSpeed = 300;
+        this.maxSpeedDropRate = 0.01;
     }
 
     update() {
@@ -28,6 +36,24 @@ class Spider extends Phaser.GameObjects.Sprite {
         this.interactUpdate();
         this.capturingUpdate();
         this.eatingUpdate();
+
+        this.age += this.scene.game.loop.delta;
+        this.minSpeed = Math.max(this.minSpeed - (this.scene.game.loop.delta / 1000) * this.minSpeedDropRate, 0);
+
+        this.maxSpeed = Math.max(this.maxSpeed - (this.scene.game.loop.delta / 1000) * this.maxSpeedDropRate, 0);
+        this.decayFactor = Math.max(this.decayFactor - (this.scene.game.loop.delta / 1000) * this.decayDropRate, 0);
+    }
+
+    getMoveSpeed() {
+        let maxOutput = 10;
+        let maxInput = 30;
+
+        let staminaPercentElapsed = 1 - (this.scene.staminaBar.stamina / this.scene.staminaBar.maxStamina);
+        let input = staminaPercentElapsed * maxInput;
+        let output = maxOutput * (this.decayFactor ** input);
+
+        let speed = ((this.maxSpeed - this.minSpeed) * (output / maxOutput)) + this.minSpeed;
+        return speed;
     }
 
     moveUpdate() {
@@ -53,7 +79,8 @@ class Spider extends Phaser.GameObjects.Sprite {
         let newVelo = new Phaser.Math.Vector2(vx, vy);
         newVelo = newVelo.normalize();
 
-        this.body.setVelocity(newVelo.x * this.moveSpeed, newVelo.y * this.moveSpeed);
+        let speed = this.getMoveSpeed();
+        this.body.setVelocity(newVelo.x * speed, newVelo.y * speed);
 
         // Enforce circular boundary (I generated this with GPT but the math is straightforward)
         const dx = this.x - this.scene.worldCenterX;
