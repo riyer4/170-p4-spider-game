@@ -23,12 +23,12 @@ class Spider extends Phaser.GameObjects.Sprite {
         this.flyCaptureDuration = 1000;  // press Z for 1 second to capture the fly
 
         this.age = 0;
-        this.decayFactor = 0.9
-        this.decayDropRate = 0.01;
+        this.decayFactor = 0.95;
+        this.decayDropRate = 0.0001;
         this.minSpeed = 50;
-        this.minSpeedDropRate = 0.01;
+        this.minSpeedDropRate = 0.001;
         this.maxSpeed = 300;
-        this.maxSpeedDropRate = 0.01;
+        this.maxSpeedDropRate = 0.001;
     }
 
     update() {
@@ -46,7 +46,7 @@ class Spider extends Phaser.GameObjects.Sprite {
 
     getMoveSpeed() {
         let maxOutput = 10;
-        let maxInput = 30;
+        let maxInput = 70;
 
         let staminaPercentElapsed = 1 - (this.scene.staminaBar.stamina / this.scene.staminaBar.maxStamina);
         let input = staminaPercentElapsed * maxInput;
