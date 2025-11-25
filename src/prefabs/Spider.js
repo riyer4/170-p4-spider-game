@@ -6,6 +6,8 @@ class Spider extends Phaser.GameObjects.Sprite {
         scene.physics.add.existing(this);
 
         this.setScale(0.3);
+        this.growthRate = 0.03;
+        this.maxScale = 0.8;
 
         // set basic physics properties
         this.moveSpeed = 300;
@@ -14,21 +16,23 @@ class Spider extends Phaser.GameObjects.Sprite {
         this.body.setImmovable(true);
         
         this.isEating = false;
+        this.isCapturing = false;
 
-        // Variables for eating fly
+        // Variables for capturing and eating fly
         this.currentPrey = null;
-        this.flyEatingDuration = 1000;  // press j for 1 second to eat the fly
+        this.flyCaptureDuration = 1000;  // press Z for 1 second to capture the fly
     }
 
     update() {
         this.moveUpdate();
         this.interactUpdate();
+        this.capturingUpdate();
         this.eatingUpdate();
     }
 
     moveUpdate() {
 
-        if (this.isEating) return;
+        if (this.isEating || this.isCapturing) return;
 
         // movement checking
         let vx = 0;
@@ -101,19 +105,39 @@ class Spider extends Phaser.GameObjects.Sprite {
     }
 
     triggerEating(collidingFly) {
-        
+        if (!collidingFly.isCaptured) return;
         this.currentPrey = collidingFly;
-        collidingFly.capture();
         this.startEating();
     }
 
-    eatingUpdate() {
+    triggerCapturing(collidingFly) {
+        if (collidingFly.isCaptured) return;
+        this.currentPrey = collidingFly;
+        this.startCapturing();
+    }
 
+    capturingUpdate() {
+        if (!this.isCapturing) return;
+
+        if (keyINTERACT.getDuration() >= this.flyCaptureDuration) {
+            this.currentPrey.capture();
+            this.currentPrey = null;
+            this.stopCapturing();
+        }
+
+        else if (!keyINTERACT.isDown) {
+            this.currentPrey = null;
+            this.stopCapturing();
+        }
+    }
+
+    eatingUpdate() {
         if (!this.isEating) return;
 
         // If the eating button has been held down longer than the required duration, kill the fly
-        if (keyINTERACT.getDuration() >= this.flyEatingDuration) {
+        if (keyINTERACT.getDuration() >= this.flyCaptureDuration) {
             this.currentPrey.kill();
+            this.grow();
             this.currentPrey = null;
             this.stopEating();
         }
@@ -126,6 +150,18 @@ class Spider extends Phaser.GameObjects.Sprite {
         }
     }
     
+    startCapturing() {
+        this.isCapturing = true;
+        this.body.setVelocity(0, 0);
+        this.anims.play('eat', true);
+    }
+    
+    stopCapturing() {
+        this.isCapturing = false;
+        this.anims.stop();
+        this.setTexture('spider_ud', 0);
+    }
+    
     startEating() {
         this.isEating = true;
         this.body.setVelocity(0, 0);
@@ -136,6 +172,15 @@ class Spider extends Phaser.GameObjects.Sprite {
         this.isEating = false;
         this.anims.stop();
         this.setTexture('spider_ud', 0);
+    }
+
+    grow() {
+        let newScale = this.scale + this.growthRate;
+        if (newScale <= this.maxScale) {
+            this.setScale(newScale);
+        } else {
+            this.setScale(this.maxScale);
+        }
     }
 
     reset() {

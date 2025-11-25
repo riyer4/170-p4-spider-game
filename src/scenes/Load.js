@@ -14,9 +14,6 @@ class Load extends Phaser.Scene {
         this.load.spritesheet('spider_eating', 'images/spider-eating.png', { frameWidth: 186, frameHeight: 96 });
         this.load.spritesheet('web', 'images/web-placeholder.png', { frameWidth: 66, frameHeight: 66 });
         this.load.spritesheet('fly', 'images/fly.png', { frameWidth: 26, frameHeight: 20 });
-        // this.load.image('map', 'images/map.png');
-        // this.load.image('frog', 'images/frog.png');
-        // this.load.image('what', 'images/what.png');
         this.load.image('blue_square', 'images/blue-square.png');
 
         //audio
@@ -62,6 +59,22 @@ class Load extends Phaser.Scene {
             this.anims.create({
                 key: 'eat',
                 frames: this.anims.generateFrameNumbers('spider_eating', { start: 0, end: 2 }),
+                frameRate: 10,
+                repeat: -1
+            });
+        }
+        if(!this.anims.exists('fly_move')){
+            this.anims.create({
+                key: 'fly_move',
+                frames: this.anims.generateFrameNumbers('fly', { start: 0, end: 1 }),
+                frameRate: 10,
+                repeat: -1
+            });
+        }
+        if(!this.anims.exists('fly_been_captured')){
+            this.anims.create({
+                key: 'fly_been_captured',
+                frames: this.anims.generateFrameNumbers('fly', { start: 2, end: 2 }),
                 frameRate: 10,
                 repeat: -1
             });

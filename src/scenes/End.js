@@ -11,22 +11,27 @@ class End extends Phaser.Scene {
 
         keyMENU = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M)
 
-        let controlsConfig = {
-            fontFamily: 'Times New Roman',
-            fontSize: '18px',
-            backgroundColor: '#f0f14e',
-            color: '#000',
-            allig: 'right',
-            padding: {
-                top: 5,
-                bottom: 5,
-            },
-
+        let textConfig = {
+            fontFamily: 'CapitolCity',
+            fontSize: '100px',
+            color: '#ff0d00',
+            align: 'center',
             fixedWidth: 0
         }
+        this.add.text(centerX, centerY-200, 'Game Over', textConfig).setOrigin(0.5)
 
-        this.add.text(centerX, centerY, '[M] -> Menu', controlsConfig).setOrigin(0.5)
-        this.add.text(centerX, centerY-200, 'Game Over', controlsConfig).setOrigin(0.5).setScale(5)
+        let buttonConfig = {
+            fontFamily: 'CapitolCity',
+            fontSize: '30px',
+            color: '#ffffff',
+            align: 'center',
+            fixedWidth: 0
+        }
+        let menuButton = this.add.text(centerX, centerY+100, 'BACK TO MENU', buttonConfig).setOrigin(0.5)
+        menuButton.setInteractive({ useHandCursor: true })
+        menuButton.on('pointerover', () => menuButton.setStyle({ color: '#ff901f' }))
+        menuButton.on('pointerout', () => menuButton.setStyle({ color: '#ffffff' }))
+        menuButton.on('pointerdown', () => this.scene.start('menuScene'))
 
     }
 

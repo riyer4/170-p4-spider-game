@@ -12,7 +12,9 @@ class Prey extends Phaser.GameObjects.Sprite {
         this.body.setCollideWorldBounds(true);
         this.body.setImmovable(false);
         
-        this.been_eaten = false;
+        this.isCaptured = false;
+        this.captureTime = 0;
+        this.escape_time = 8000;
         
         // Store spawn position for struggle range
         this.spawnX = x;
@@ -25,11 +27,20 @@ class Prey extends Phaser.GameObjects.Sprite {
     }
 
     update() {
-        if (this.been_eaten) {
+        if (this.isCaptured) {
+            let currentTime = this.scene.time.now;
+            if (currentTime - this.captureTime >= this.escape_time) {
+                this.escape();
+                return;
+            }
+            
             this.body.setVelocity(0, 0);
+            this.anims.stop();
+            this.anims.play('fly_been_captured', true);
             return;
         }
         
+        this.anims.play('fly_move', true);
         // Change target position randomly within struggle range every 1-2 seconds
         if (!this.moveTimer) {
             this.moveTimer = this.scene.time.addEvent({
@@ -58,12 +69,20 @@ class Prey extends Phaser.GameObjects.Sprite {
     }
     
     capture() {
-        this.been_eaten = true;
+        this.isCaptured = true;
+        this.captureTime = this.scene.time.now;
         this.body.setVelocity(0, 0);
     }
     
     release() {
-        this.been_eaten = false;
+        this.isCaptured = false;
+        this.captureTime = 0;
+    }
+    
+    escape() {
+        this.isCaptured = false;
+        this.captureTime = 0;
+        this.anims.play('fly_move', true);
     }
 
     setNewTarget() {

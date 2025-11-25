@@ -28,14 +28,14 @@ class Controls extends Phaser.Scene {
         // Text configuration for instructions
         let textConfig = {
             fontFamily: 'CapitolCity',
-            fontSize: '25px',
+            fontSize: '30px',
             color: '#ffffff',
             align: 'center',
             fixedWidth: 0
         }
 
-        this.add.text(centerX, 180, 'Press Arrow Keys keys to move', textConfig).setOrigin(0.5);
-        this.add.text(centerX, 230, '[Z] to interact with objects', textConfig).setOrigin(0.5);
+        this.add.text(centerX, 200, 'Hold the Arrow Keys to move', textConfig).setOrigin(0.5);
+        this.add.text(centerX, 300, 'Hold the "Z" key to interact with objects', textConfig).setOrigin(0.5);
     }
 
     update() {

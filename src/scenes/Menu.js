@@ -7,7 +7,6 @@ class Menu extends Phaser.Scene {
 
         // for bg ex)
         // this.mainScreen = this.add.tileSprite(0, 0, 640, 480, 'menu').setOrigin(0, 0)
-        // this.add.image(0, 0, 'what').setOrigin(0).setScale(2)
         
         // Check if sound already exists to avoid creating duplicates
         if (!this.sound.get('background1')) {
@@ -15,7 +14,7 @@ class Menu extends Phaser.Scene {
         } else {
             this.background1 = this.sound.get('background1')
         }
-        //this.background1.play()
+        this.background1.play()
         
         //placeholder menu text
         let menuConfig = {
@@ -68,9 +67,6 @@ class Menu extends Phaser.Scene {
         creditsButton.on('pointerdown', () => this.scene.start('creditsScene'))
 
         //keys
-        keyCONTROLS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C)
-        keyCREDITS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X)
-        keySTART = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
         keyMUTE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.U)
         
         // Track mute state
@@ -78,19 +74,6 @@ class Menu extends Phaser.Scene {
     }
     
     update() {
-
-        if (Phaser.Input.Keyboard.JustDown(keySTART)) {
-            this.scene.start('playScene')    
-        }
-
-        if (Phaser.Input.Keyboard.JustDown(keyCONTROLS)) {
-            this.scene.start('controlsScene')    
-        }
-
-        if (Phaser.Input.Keyboard.JustDown(keyCREDITS)) {
-            this.scene.start('creditsScene')    
-        }
-
         if (Phaser.Input.Keyboard.JustDown(keyMUTE)) {
             this.toggleMute()
         }
