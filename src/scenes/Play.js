@@ -58,7 +58,13 @@ class Play extends Phaser.Scene {
 
     interactCheck() {
         let prey = this.preyManager.checkCollision(this.spider);
-        if (prey) this.spider.triggerEating(prey);
+        if (prey) {
+            if (prey.isCaptured) {
+                this.spider.triggerEating(prey);
+            } else {
+                this.spider.triggerCapturing(prey);
+            }
+        }
     }
 
     growWeb() {
