@@ -12,9 +12,15 @@ class Prey extends Phaser.GameObjects.Sprite {
         this.body.setCollideWorldBounds(true);
         this.body.setImmovable(false);
         
+        this.isHeld = false;
         this.isCaptured = false;
+        this.isActive = false;
+
         this.captureTime = 0;
         this.escape_time = 8000;
+
+        this.birthTime = 0;
+        this.lifetime = 8000;
         
         // Store spawn position for struggle range
         this.spawnX = x;
@@ -24,12 +30,10 @@ class Prey extends Phaser.GameObjects.Sprite {
         // Target position within struggle range
         this.targetX = x;
         this.targetY = y;
-
-        this.isAlive = false;
     }
 
     update() {
-        if (!this.isAlive) {
+        if (!this.isActive) {
             return;
         }
 
@@ -43,6 +47,11 @@ class Prey extends Phaser.GameObjects.Sprite {
             this.body.setVelocity(0, 0);
             this.anims.stop();
             this.anims.play('fly_been_captured', true);
+            return;
+        }
+
+        // Do not move if the player is currently eating or capturing this fly
+        if (this.isHeld) {
             return;
         }
         
@@ -72,6 +81,11 @@ class Prey extends Phaser.GameObjects.Sprite {
             // Reached target, stop moving
             this.body.setVelocity(0, 0);
         }
+
+        let currentTime = this.scene.time.now;
+        if (currentTime - this.birthTime >= this.lifetime) {
+            this.kill(false);
+        }
     }
     
     capture() {
@@ -83,6 +97,11 @@ class Prey extends Phaser.GameObjects.Sprite {
     release() {
         this.isCaptured = false;
         this.captureTime = 0;
+    }
+
+    // Set by the spider if the spider is currently eating or capturing the fly
+    setHeld(val) {
+        this.isHeld = val;
     }
     
     escape() {
@@ -99,15 +118,16 @@ class Prey extends Phaser.GameObjects.Sprite {
         this.targetY = this.spawnY + Math.sin(angle) * distance;
     }
 
-    kill() {
-        this.scene.preyManager.killFly(this);
+    kill(wasEaten) {
+        this.scene.preyManager.killPrey(this, wasEaten);
     }
 
-    setAlive(alive) {
-        this.visible = alive;
-        this.isAlive = alive;
-        this.setActive(alive);
-        this.body.enable = alive;
+    setActive(newActive) {
+        this.visible = newActive;
+        this.body.enable = newActive;
+        this.birthTime = this.scene.time.now;
+
+        this.isActive = newActive;
     }
 
     setPosition(x, y) {
@@ -118,7 +138,9 @@ class Prey extends Phaser.GameObjects.Sprite {
         this.targetX = x;
         this.targetY = y;
 
+        this.isHeld = false;
         this.isCaptured = false;
+
         this.captureTime = 0;
     }
 
