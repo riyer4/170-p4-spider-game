@@ -12,7 +12,7 @@ class PreyManager extends Phaser.GameObjects.GameObject {
             // Generate random position within web circle
             
             let fly = new Prey(scene, 0, 0, 'fly', 0, 10);
-            fly.setAlive(false);
+            fly.setActive(false);
             this.flies.push(fly);
         }
     }
@@ -37,20 +37,20 @@ class PreyManager extends Phaser.GameObjects.GameObject {
 
     spawnFly() {
         for (let i = 0; i < this.flies.length; i++) {
-            if (!this.flies[i].isAlive) {
+            if (!this.flies[i].isActive) {
                 let angle = Phaser.Math.FloatBetween(0, Math.PI * 2);
                 let distance = Phaser.Math.FloatBetween(0, this.scene.web.radius * 0.8); // keep flies within web range, like, it won't spawn on the edge of the web.
                 let randomX = this.scene.worldCenterX + Math.cos(angle) * distance;
                 let randomY = this.scene.worldCenterY + Math.sin(angle) * distance;
                 
-                this.flies[i].setPosition(randomX, randomY);
-                this.flies[i].setAlive(true);
+                this.flies[i].spawn(randomX, randomY);
+                this.flies[i].setActive(true);
                 break;
             }
         }
     }
 
-    killFly(fly) {
+    killPrey(prey, wasEaten) {
         // Remove the fly from the array
         // let index = this.flies.indexOf(fly);
         // if (index > -1) {
@@ -60,9 +60,11 @@ class PreyManager extends Phaser.GameObjects.GameObject {
         //     this.scene.staminaBar.addStamina(10);
         // }
 
-        fly.setAlive(false);
-        this.scene.addScore(fly.points);
-        this.scene.staminaBar.addStamina(10);
+        prey.setActive(false);
+        if (wasEaten) {
+            this.scene.addScore(prey.points);
+            this.scene.staminaBar.addStamina(10);
+        }
     }
 
     checkCollision(other) {

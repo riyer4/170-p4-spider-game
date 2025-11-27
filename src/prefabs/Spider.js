@@ -134,12 +134,14 @@ class Spider extends Phaser.GameObjects.Sprite {
     triggerEating(collidingFly) {
         if (!collidingFly.isCaptured) return;
         this.currentPrey = collidingFly;
+        this.currentPrey.setHeld(true);
         this.startEating();
     }
 
     triggerCapturing(collidingFly) {
         if (collidingFly.isCaptured) return;
         this.currentPrey = collidingFly;
+        this.currentPrey.setHeld(true);
         this.startCapturing();
     }
 
@@ -147,12 +149,14 @@ class Spider extends Phaser.GameObjects.Sprite {
         if (!this.isCapturing) return;
 
         if (keyINTERACT.getDuration() >= this.flyCaptureDuration) {
+            this.currentPrey.setHeld(false);
             this.currentPrey.capture();
             this.currentPrey = null;
             this.stopCapturing();
         }
 
         else if (!keyINTERACT.isDown) {
+            this.currentPrey.setHeld(false);
             this.currentPrey = null;
             this.stopCapturing();
         }
@@ -163,7 +167,7 @@ class Spider extends Phaser.GameObjects.Sprite {
 
         // If the eating button has been held down longer than the required duration, kill the fly
         if (keyINTERACT.getDuration() >= this.flyCaptureDuration) {
-            this.currentPrey.kill();
+            this.currentPrey.kill(true);
             this.grow();
             this.currentPrey = null;
             this.stopEating();
@@ -171,7 +175,7 @@ class Spider extends Phaser.GameObjects.Sprite {
 
         // If the key is not being held down anymore, release the fly
         else if (!keyINTERACT.isDown) {
-            this.currentPrey.release();
+            this.currentPrey.setHeld(false);
             this.currentPrey = null;
             this.stopEating();
         }
