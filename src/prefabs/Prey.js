@@ -19,8 +19,7 @@ class Prey extends Phaser.GameObjects.Sprite {
         this.captureTime = 0;
         this.escape_time = 8000;
 
-        this.birthTime = 0;
-        this.lifetime = 8000;
+        this.lifetime = 8000; // Actual values set in the spawn function, not here in the constructor
         
         // Store spawn position for struggle range
         this.spawnX = x;
@@ -32,6 +31,21 @@ class Prey extends Phaser.GameObjects.Sprite {
         this.targetY = y;
     }
 
+    spawn(x, y) {
+        this.x = x;
+        this.y = y;
+        this.spawnX = x;
+        this.spawnY = y;
+        this.targetX = x;
+        this.targetY = y;
+
+        this.isHeld = false;
+        this.isCaptured = false;
+
+        this.lifetime = 8000;
+        this.captureTime = 0;
+    }
+
     update() {
         if (!this.isActive) {
             return;
@@ -41,17 +55,13 @@ class Prey extends Phaser.GameObjects.Sprite {
             let currentTime = this.scene.time.now;
             if (currentTime - this.captureTime >= this.escape_time) {
                 this.escape();
-                return;
             }
-            
-            this.body.setVelocity(0, 0);
-            this.anims.stop();
-            this.anims.play('fly_been_captured', true);
             return;
         }
 
         // Do not move if the player is currently eating or capturing this fly
         if (this.isHeld) {
+            this.body.setVelocity(0, 0);
             return;
         }
         
@@ -82,8 +92,9 @@ class Prey extends Phaser.GameObjects.Sprite {
             this.body.setVelocity(0, 0);
         }
 
-        let currentTime = this.scene.time.now;
-        if (currentTime - this.birthTime >= this.lifetime) {
+        // Despawn spider if it has been on the web long enough
+        this.lifetime -= this.scene.game.loop.delta;
+        if (this.lifetime <= 0) {
             this.kill(false);
         }
     }
@@ -92,11 +103,7 @@ class Prey extends Phaser.GameObjects.Sprite {
         this.isCaptured = true;
         this.captureTime = this.scene.time.now;
         this.body.setVelocity(0, 0);
-    }
-    
-    release() {
-        this.isCaptured = false;
-        this.captureTime = 0;
+        this.anims.play('fly_been_captured', true);
     }
 
     // Set by the spider if the spider is currently eating or capturing the fly
@@ -111,6 +118,8 @@ class Prey extends Phaser.GameObjects.Sprite {
     }
 
     setNewTarget() {
+        if (!this.isActive) return;
+
         // Set a new random target position within struggle range
         let angle = Phaser.Math.FloatBetween(0, Math.PI * 2);
         let distance = Phaser.Math.FloatBetween(0, this.struggleRange);
@@ -128,23 +137,5 @@ class Prey extends Phaser.GameObjects.Sprite {
         this.birthTime = this.scene.time.now;
 
         this.isActive = newActive;
-    }
-
-    setPosition(x, y) {
-        this.x = x;
-        this.y = y;
-        this.spawnX = x;
-        this.spawnY = y;
-        this.targetX = x;
-        this.targetY = y;
-
-        this.isHeld = false;
-        this.isCaptured = false;
-
-        this.captureTime = 0;
-    }
-
-    reset() {
-        
     }
 }

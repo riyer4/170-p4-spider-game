@@ -43,7 +43,7 @@ class PreyManager extends Phaser.GameObjects.GameObject {
                 let randomX = this.scene.worldCenterX + Math.cos(angle) * distance;
                 let randomY = this.scene.worldCenterY + Math.sin(angle) * distance;
                 
-                this.flies[i].setPosition(randomX, randomY);
+                this.flies[i].spawn(randomX, randomY);
                 this.flies[i].setActive(true);
                 break;
             }

@@ -176,7 +176,6 @@ class Spider extends Phaser.GameObjects.Sprite {
         // If the key is not being held down anymore, release the fly
         else if (!keyINTERACT.isDown) {
             this.currentPrey.setHeld(false);
-            this.currentPrey.release();
             this.currentPrey = null;
             this.stopEating();
         }
