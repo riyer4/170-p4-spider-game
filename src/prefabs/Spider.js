@@ -148,6 +148,12 @@ class Spider extends Phaser.GameObjects.Sprite {
     capturingUpdate() {
         if (!this.isCapturing) return;
 
+        // Move prey to spider's mouth position
+        if (this.currentPrey) {
+            this.currentPrey.x = this.x;
+            this.currentPrey.y = this.y + (this.displayHeight / 2);
+        }
+
         if (keyINTERACT.getDuration() >= this.flyCaptureDuration) {
             this.currentPrey.setHeld(false);
             this.currentPrey.capture();
@@ -164,6 +170,12 @@ class Spider extends Phaser.GameObjects.Sprite {
 
     eatingUpdate() {
         if (!this.isEating) return;
+
+        // Move prey to spider's mouth position
+        if (this.currentPrey) {
+            this.currentPrey.x = this.x;
+            this.currentPrey.y = this.y + (this.displayHeight / 2);
+        }
 
         // If the eating button has been held down longer than the required duration, kill the fly
         if (keyINTERACT.getDuration() >= this.flyCaptureDuration) {
@@ -185,24 +197,40 @@ class Spider extends Phaser.GameObjects.Sprite {
         this.isCapturing = true;
         this.body.setVelocity(0, 0);
         this.anims.play('eat', true);
+        
+        if (this.scene.captureSound && !this.scene.captureSound.isPlaying) {
+            this.scene.captureSound.play();
+        }
     }
     
     stopCapturing() {
         this.isCapturing = false;
         this.anims.stop();
         this.setTexture('spider_ud', 0);
+        
+        if (this.scene.captureSound && this.scene.captureSound.isPlaying) {
+            this.scene.captureSound.stop();
+        }
     }
     
     startEating() {
         this.isEating = true;
         this.body.setVelocity(0, 0);
         this.anims.play('eat', true);
+        
+        if (this.scene.eatingSound && !this.scene.eatingSound.isPlaying) {
+            this.scene.eatingSound.play();
+        }
     }
     
     stopEating() {
         this.isEating = false;
         this.anims.stop();
         this.setTexture('spider_ud', 0);
+        
+        if (this.scene.eatingSound && this.scene.eatingSound.isPlaying) {
+            this.scene.eatingSound.stop();
+        }
     }
 
     grow() {

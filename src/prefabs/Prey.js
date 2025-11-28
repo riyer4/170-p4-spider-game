@@ -15,11 +15,13 @@ class Prey extends Phaser.GameObjects.Sprite {
         this.isHeld = false;
         this.isCaptured = false;
         this.isActive = false;
+        this.isEscaping = false;
 
         this.captureTime = 0;
         this.escape_time = 8000;
 
         this.lifetime = 8000; // Actual values set in the spawn function, not here in the constructor
+        this.escapeSpeed = 500;
         
         // Store spawn position for struggle range
         this.spawnX = x;
@@ -41,13 +43,27 @@ class Prey extends Phaser.GameObjects.Sprite {
 
         this.isHeld = false;
         this.isCaptured = false;
+        this.isEscaping = false;
 
         this.lifetime = 8000;
+        this.escape_time = Phaser.Math.Between(2000, 6000);
         this.captureTime = 0;
     }
 
     update() {
         if (!this.isActive) {
+            return;
+        }
+
+        // Fly runs away from web
+        if (this.isEscaping) {
+            this.anims.play('fly_move', true);
+            const screenWidth = this.scene.cameras.main.width;
+            const screenHeight = this.scene.cameras.main.height;
+            
+            if (this.x > screenWidth || this.y > screenHeight) {
+                this.kill(false);
+            }
             return;
         }
 
@@ -92,10 +108,10 @@ class Prey extends Phaser.GameObjects.Sprite {
             this.body.setVelocity(0, 0);
         }
 
-        // Despawn spider if it has been on the web long enough
+        // When lifetime expires, fly tries to escape
         this.lifetime -= this.scene.game.loop.delta;
         if (this.lifetime <= 0) {
-            this.kill(false);
+            this.startEscaping();
         }
     }
     
@@ -125,6 +141,26 @@ class Prey extends Phaser.GameObjects.Sprite {
         let distance = Phaser.Math.FloatBetween(0, this.struggleRange);
         this.targetX = this.spawnX + Math.cos(angle) * distance;
         this.targetY = this.spawnY + Math.sin(angle) * distance;
+    }
+
+    startEscaping() {
+        this.isEscaping = true;
+        
+        if (this.moveTimer) {
+            this.moveTimer.remove();
+            this.moveTimer = null;
+        }
+        
+        const directions = [
+            { x: 0, y: -1 },  // up
+            { x: 0, y: 1 },   // down
+            { x: -1, y: 0 },  // left
+            { x: 1, y: 0 }    // right
+        ];
+        
+        const direction = directions[Phaser.Math.Between(0, directions.length - 1)];
+        this.body.setVelocity(direction.x * this.escapeSpeed, direction.y * this.escapeSpeed);
+        this.body.setCollideWorldBounds(false);
     }
 
     kill(wasEaten) {
