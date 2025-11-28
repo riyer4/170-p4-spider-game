@@ -18,6 +18,8 @@ class Load extends Phaser.Scene {
 
         //audio
         this.load.audio('background1', 'audios/background1.mp3');
+        this.load.audio('eating', 'audios/nom-nom-nom_gPJiWn4.mp3');
+        this.load.audio('capture', 'audios/capture_sound.wav');
     }
 
     create() {

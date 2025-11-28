@@ -27,15 +27,16 @@ class Controls extends Phaser.Scene {
 
         // Text configuration for instructions
         let textConfig = {
-            fontFamily: 'CapitolCity',
-            fontSize: '30px',
+            fontFamily: 'JAi_____',
+            fontSize: '20px',
             color: '#ffffff',
             align: 'center',
             fixedWidth: 0
         }
 
-        this.add.text(centerX, 200, 'Hold the Arrow Keys to move', textConfig).setOrigin(0.5);
-        this.add.text(centerX, 300, 'Hold the "Z" key to interact with objects', textConfig).setOrigin(0.5);
+        this.add.text(centerX, 200, 'Hold the Arrow Keys to move the spider.', textConfig).setOrigin(0.5);
+        this.add.text(centerX, 300, 'Press the "Z" key for 1s to catch the fly.', textConfig).setOrigin(0.5);
+        this.add.text(centerX, 400, 'Press the "Z" key one more time for 1s to eat the fly.', textConfig).setOrigin(0.5);
     }
 
     update() {

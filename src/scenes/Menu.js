@@ -10,26 +10,12 @@ class Menu extends Phaser.Scene {
         
         // Check if sound already exists to avoid creating duplicates
         if (!this.sound.get('background1')) {
-            this.background1 = this.sound.add('background1', {volume: 0.5, loop: true})
+            this.background1 = this.sound.add('background1', {volume: 0.3, loop: true})
         } else {
             this.background1 = this.sound.get('background1')
         }
         this.background1.play()
         
-        //placeholder menu text
-        let menuConfig = {
-            fontFamily: 'Times New Roman',
-            fontSize: '18px',
-            backgroundColor: '#f0f14e',
-            color: '#000',
-            allig: 'right',
-            padding: {
-                top: 5,
-                bottom: 5,
-            },
-
-            fixedWidth: 0
-        }
         this.add.text(centerX, centerY-300, "SPIDER", {
             fontFamily: "WeberSpider",   
             fontSize: "100px",

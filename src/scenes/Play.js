@@ -17,6 +17,9 @@ class Play extends Phaser.Scene {
         this.score = 0;
         this.gameOver = false;
 
+        this.eatingSound = this.sound.add('eating', { volume: 1, loop: false });
+        this.captureSound = this.sound.add('capture', { volume: 1, loop: false });
+
         this.web = new Web(this, this.worldCenterX, this.worldCenterY, 'web', 0);
         this.preyManager = new PreyManager(this);
         this.spider = new Spider(this, this.worldCenterX, this.worldCenterY, 'spider_ud', 0);
