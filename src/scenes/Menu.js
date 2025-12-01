@@ -3,139 +3,63 @@ class Menu extends Phaser.Scene {
         super("menuScene")
     }
 
-    
-    preload() {
-    //asset folder path
-    this.load.path = './assets/';
-    
-    // image + sprite loading
-    this.load.spritesheet('spider_lr', 'images/spider_moving_l-r.png', { frameWidth: 186, frameHeight: 96 });
-    this.load.spritesheet('spider_ud', 'images/spider_moving_u-d.png', { frameWidth: 186, frameHeight: 96 });
-    this.load.spritesheet('spider_eating', 'images/spider_eating.png', { frameWidth: 186, frameHeight: 96 });
-    this.load.spritesheet('fly', 'images/fly.png', { frameWidth: 26, frameHeight: 20 });
-    this.load.image('map', 'images/map.png');
-    this.load.image('frog', 'images/frog.png');
-    this.load.image('what', 'images/what.png');
-    this.load.image('ball', 'images/ball.png');
-    this.load.image('cup', 'images/cup.png');
-    this.load.image('portal', 'images/portal.png');
-
-
-    // for menu
-
-        // ex) this.load.image('menu', './assets/png/menu.png')
-
-    //audio!!
-
-        // ex) this.load.audio('bgm', './assets/audio/ltl_music.wav')
-    this.load.audio('background1', 'audios/background1.mp3')
-
-    }
-
-
     create() {
 
         // for bg ex)
         // this.mainScreen = this.add.tileSprite(0, 0, 640, 480, 'menu').setOrigin(0, 0)
-        this.add.image(0, 0, 'what').setOrigin(0).setScale(2)
-        this.background1 = this.sound.add('background1', {volume: 0.5, loop: true})
-        //this.background1.play()
-        //placeholder menu text
+        
+        // Check if sound already exists to avoid creating duplicates
+        if (!this.sound.get('background1')) {
+            this.background1 = this.sound.add('background1', {volume: 0.3, loop: true})
+        } else {
+            this.background1 = this.sound.get('background1')
+        }
+        this.background1.play()
+        
+        this.add.text(centerX, centerY-300, "SPIDER", {
+            fontFamily: "WeberSpider",   
+            fontSize: "100px",
+            color: "#ffffff"
+        }).setOrigin(0.5);
 
-        let menuConfig = {
-            fontFamily: 'Times New Roman',
-            fontSize: '18px',
-            backgroundColor: '#f0f14e',
-            color: '#000',
-            allig: 'right',
-            padding: {
-                top: 5,
-                bottom: 5,
-            },
-
+        // Button configuration without background color
+        let buttonConfig = {
+            fontFamily: 'CapitolCity',
+            fontSize: '30px',
+            color: '#ffffff',
+            align: 'center',
             fixedWidth: 0
         }
 
-        this.add.text(200, 600, '[SPACE] to Start', menuConfig).setOrigin(0.5)
-        menuConfig.backgroundColor = '#ff901f'
-        this.add.text(400, 600, '[C] for Controls', menuConfig).setOrigin(0.5)
-        menuConfig.backgroundColor = '#ff5f85'
-        this.add.text(600, 600, '[X] for Credits', menuConfig).setOrigin(0.5)
-        menuConfig.backgroundColor = '#ff5f85'
-        this.add.text(200, 700, '[U] to Mute', menuConfig).setOrigin(0.5)
-        menuConfig.backgroundColor = '#ff901f'
+        // Create Start button
+        let startButton = this.add.text(centerX, centerY, 'Start', buttonConfig).setOrigin(0.5)
+        startButton.setInteractive({ useHandCursor: true })
+        startButton.on('pointerover', () => startButton.setStyle({ color: '#ff901f' }))
+        startButton.on('pointerout', () => startButton.setStyle({ color: '#ffffff' }))
+        startButton.on('pointerdown', () => this.scene.start('playScene'))
+
+        // Create Controls button
+        let controlsButton = this.add.text(centerX, centerY+100, 'Controls', buttonConfig).setOrigin(0.5)
+        controlsButton.setInteractive({ useHandCursor: true })
+        controlsButton.on('pointerover', () => controlsButton.setStyle({ color: '#ff901f' }))
+        controlsButton.on('pointerout', () => controlsButton.setStyle({ color: '#ffffff' }))
+        controlsButton.on('pointerdown', () => this.scene.start('controlsScene'))
+
+        // Create Credits button
+        let creditsButton = this.add.text(centerX, centerY+200, 'Credits', buttonConfig).setOrigin(0.5)
+        creditsButton.setInteractive({ useHandCursor: true })
+        creditsButton.on('pointerover', () => creditsButton.setStyle({ color: '#ff5f85' }))
+        creditsButton.on('pointerout', () => creditsButton.setStyle({ color: '#ffffff' }))
+        creditsButton.on('pointerdown', () => this.scene.start('creditsScene'))
 
         //keys
-
-        keyCONTROLS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C)
-        keyCREDITS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X)
-        keySTART = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
         keyMUTE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.U)
         
         // Track mute state
-        this.isMuted = false
-
-        // Create Spider animations
-        if(!this.anims.exists('moveUp')){
-            this.anims.create({
-                key: 'moveUp',
-                frames: this.anims.generateFrameNumbers('spider_ud', { start: 0, end: 2 }),
-                frameRate: 10,
-                repeat: -1
-            });
-        }
-        if(!this.anims.exists('moveDown')){
-            this.anims.create({
-                key: 'moveDown',
-                frames: this.anims.generateFrameNumbers('spider_ud', { start: 0, end: 2 }),
-                frameRate: 10,
-                repeat: -1
-            });
-        }
-        if(!this.anims.exists('moveRight')){
-            this.anims.create({
-                key: 'moveRight',
-                frames: this.anims.generateFrameNumbers('spider_lr', { start: 3, end: 5 }),
-                frameRate: 10,
-                repeat: -1
-            });
-        }
-        if(!this.anims.exists('moveLeft')){
-            this.anims.create({
-                key: 'moveLeft',
-                frames: this.anims.generateFrameNumbers('spider_lr', { start: 0, end: 2 }),
-                frameRate: 10,
-                repeat: -1
-            });
-        }
-        if(!this.anims.exists('eat')){
-            this.anims.create({
-                key: 'eat',
-                frames: this.anims.generateFrameNumbers('spider_eating', { start: 0, end: 2 }),
-                frameRate: 10,
-                repeat: -1
-            });
-        }
+        this.isMuted = false;
     }
     
     update() {
-
-
-        if (Phaser.Input.Keyboard.JustDown(keySTART)) {
-            
-            this.scene.start('playScene')    
-        }
-
-        if (Phaser.Input.Keyboard.JustDown(keyCONTROLS)) {
-
-            this.scene.start('controlsScene')    
-        }
-
-        if (Phaser.Input.Keyboard.JustDown(keyCREDITS)) {
-
-            this.scene.start('creditsScene')    
-        }
-
         if (Phaser.Input.Keyboard.JustDown(keyMUTE)) {
             this.toggleMute()
         }

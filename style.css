@@ -1,0 +1,20 @@
+/* style.css */
+@font-face {
+    font-family: "WeberSpider";             
+    src: url("assets/fonts/WEBER SPIDER.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "CapitolCity";             
+    src: url("assets/fonts/capitolcity.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: "JAi_____";             
+    src: url("assets/fonts/JAi_____.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
