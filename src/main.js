@@ -10,7 +10,7 @@ let config = {
     physics: {
         default: 'arcade',
         arcade: {
-            debug: true,
+            debug: false,
         }
     },
     scene: [ Menu, Controls, Credits, Play, MiniGame, End ]
@@ -21,7 +21,7 @@ let centerX = game.config.width / 2
 let centerY = game.config.height / 2
 
 // keyboard bindings if needed (I used these in my other phaser projects lol)
-let keyLEFT, keyRIGHT, keyUP, keyDOWN, keySTART, keyCREDITS, keyCONTROLS, keyMENU, keyMUTE, keyEAT
+let keyLEFT, keyRIGHT, keyUP, keyDOWN, keySTART, keyCREDITS, keyCONTROLS, keyMENU, keyMUTE, keyINTERACT
 
 // UI sizes!!
 
