@@ -16,6 +16,9 @@ class Menu extends Phaser.Scene {
     this.load.image('map', 'images/map.png');
     this.load.image('frog', 'images/frog.png');
     this.load.image('what', 'images/what.png');
+    this.load.image('ball', 'images/ball.png');
+    this.load.image('cup', 'images/cup.png');
+    this.load.image('portal', 'images/portal.png');
 
 
     // for menu

@@ -53,6 +53,17 @@ class Play extends Phaser.Scene {
         this.staminaBarBG.setPosition(this.cameras.main.width - 10, 10);
         this.staminaBar.setPosition(this.cameras.main.width - 11, 11);
         this.staminaDrainRate = 5;
+
+        //Add Balls
+        this.balls = [];
+        for (let i = 0; i < 3; i++) { 
+            let ballX = Phaser.Math.Between(50, this.map.displayWidth - 50);
+            let ballY = Phaser.Math.Between(50, this.map.displayHeight - 50);
+            let ball = this.physics.add.sprite(ballX, ballY, 'portal'); 
+            ball.setScale(1.1);
+            ball.setImmovable(true); 
+            this.balls.push(ball);
+        }
     }
 
     update() {
@@ -68,7 +79,7 @@ class Play extends Phaser.Scene {
         if(!this.gameOver){
             this.spider.update()
             this.handleFlyEating()
-            
+            this.handleBallCollision();
             // Update all flies
             for (let i = 0; i < this.flies.length; i++) {
                 this.flies[i].update();
@@ -124,6 +135,22 @@ class Play extends Phaser.Scene {
 
     checkCollision(spider, prey) {
         return this.physics.overlap(spider, prey);
+    }
+
+    handleBallCollision() {
+    let collidingBall = null;
+    for (let ball of this.balls) {
+        if (this.checkCollision(this.spider, ball)) {
+            collidingBall = ball;
+            break;
+        }
+    }
+
+        if (collidingBall) {
+            collidingBall.destroy();
+            this.scene.pause(); 
+            this.scene.launch('MiniGameScene');
+        }
     }
 
 }
