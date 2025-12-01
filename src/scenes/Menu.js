@@ -3,36 +3,6 @@ class Menu extends Phaser.Scene {
         super("menuScene")
     }
 
-    
-    preload() {
-    //asset folder path
-    this.load.path = './assets/';
-    
-    // image + sprite loading
-    this.load.spritesheet('spider_lr', 'images/spider_moving_l-r.png', { frameWidth: 186, frameHeight: 96 });
-    this.load.spritesheet('spider_ud', 'images/spider_moving_u-d.png', { frameWidth: 186, frameHeight: 96 });
-    this.load.spritesheet('spider_eating', 'images/spider_eating.png', { frameWidth: 186, frameHeight: 96 });
-    this.load.spritesheet('fly', 'images/fly.png', { frameWidth: 26, frameHeight: 20 });
-    this.load.image('map', 'images/map.png');
-    this.load.image('frog', 'images/frog.png');
-    this.load.image('what', 'images/what.png');
-    this.load.image('ball', 'images/ball.png');
-    this.load.image('cup', 'images/cup.png');
-    this.load.image('portal', 'images/portal.png');
-
-
-    // for menu
-
-        // ex) this.load.image('menu', './assets/png/menu.png')
-
-    //audio!!
-
-        // ex) this.load.audio('bgm', './assets/audio/ltl_music.wav')
-    this.load.audio('background1', 'audios/background1.mp3')
-
-    }
-
-
     create() {
 
         // for bg ex)
