@@ -1,27 +1,42 @@
-
 class Minigame extends Phaser.Scene {
     constructor() {
         super("minigameScene");
     }
 
     create() {
-        this.add.rectangle(400, 400, 800, 800, 0);
+        this.add.rectangle(400, 400, 800, 800, 0x000000);
+        this.add.image(400, 400, 'minigame_bg').setScale(6.0);
+        this.add.image(400, 400, 'holes').setScale(6.0);
 
         //Slingshot pos
         this.restX = 150;
-        this.restY = 700;
+        this.restY = 550;
 
-        this.ball = this.physics.add.sprite(this.restX, this.restY, 'ball').setScale(1.3);
+        this.ball = this.physics.add.sprite(this.restX, this.restY, 'ball').setScale(1.0);
         this.ball.setCollideWorldBounds(true);
         this.ball.setBounce(0.6);
         this.ball.body.setGravityY(0); //No gravity until shot
         this.ball.setImmovable(true); //Ball stays in place before shot
 
-        //Add Cups 
-        this.cups = this.physics.add.staticGroup();
-        for (let i = 0; i < 5; i++) {
-            let cup = this.cups.create(600 + i * 60, 700 - i * 20, 'cup').setScale(0.5).refreshBody();
+        // invisible
+        this.holes = this.physics.add.staticGroup();
+
+        const holePositions = [
+            { x: 600, y: 220, r: 30 },
+            { x: 580, y: 430, r: 25 },
+            { x: 580, y: 660, r: 40 },
+        ];
+
+        for (let hole of holePositions) {
+            let circle = this.add.circle(hole.x, hole.y, hole.r, 0xff0000, 0);
+
+            this.physics.add.existing(circle, true);
+            circle.body.setCircle(hole.r);
+            circle.body.setOffset(-hole.r, -hole.r);
+
+            this.holes.add(circle);
         }
+
 
         this.dragging = false;
         this.shot = false;
@@ -65,12 +80,11 @@ class Minigame extends Phaser.Scene {
             }
         });
 
-        //Cup hit detection
-        this.physics.add.overlap(this.ball, this.cups, (ball, cup) => {
-            cup.destroy();
+        this.physics.add.overlap(this.ball, this.holes, () => {
             this.scene.stop('minigameScene');
             this.scene.resume('playScene');
         });
+
     }
 
     update() {

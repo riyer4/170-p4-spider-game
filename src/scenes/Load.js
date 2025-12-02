@@ -14,8 +14,10 @@ class Load extends Phaser.Scene {
         this.load.spritesheet('spider_eating', 'images/spider-eating.png', { frameWidth: 186, frameHeight: 96 });
         this.load.spritesheet('web', 'images/web-placeholder.png', { frameWidth: 66, frameHeight: 66 });
         this.load.spritesheet('fly', 'images/fly.png', { frameWidth: 26, frameHeight: 20 });
+        this.load.image('minigame_bg', 'images/mg-bg.png');
+        this.load.image('holes', 'images/tree-holes.png')
         this.load.image('blue_square', 'images/blue-square.png');
-        this.load.image('ball', 'images/ball.png');
+        this.load.image('ball', 'images/silk-ball.png');
         this.load.image('cup', 'images/cup.png');
         this.load.image('portal', 'images/portal.png');
 
