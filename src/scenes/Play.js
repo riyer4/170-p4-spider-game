@@ -22,6 +22,7 @@ class Play extends Phaser.Scene {
 
         this.web = new Web(this, this.worldCenterX, this.worldCenterY, 'web', 0);
         this.preyManager = new PreyManager(this);
+        this.portalManager = new PortalManager(this);
         this.spider = new Spider(this, this.worldCenterX, this.worldCenterY, 'spider_ud', 0);
         this.staminaBar = new StaminaBar(this);
 
@@ -38,6 +39,7 @@ class Play extends Phaser.Scene {
         this.cameras.main.setBounds(0, 0, this.worldWidth, this.worldHeight)
 
         this.physics.world.setBounds(0, 0, this.worldWidth, this.worldHeight)
+
     }
 
     update() {
@@ -51,6 +53,7 @@ class Play extends Phaser.Scene {
         if(!this.gameOver){
             this.spider.update()
             this.preyManager.update();
+            this.portalManager.update(this.spider);
         }
     }
 
@@ -85,4 +88,5 @@ class Play extends Phaser.Scene {
         this.score += val;
         console.log("New score: " + this.score);
     }
+     
 }
