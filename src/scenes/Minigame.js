@@ -5,8 +5,8 @@ class Minigame extends Phaser.Scene {
 
     create() {
         this.add.rectangle(400, 400, 800, 800, 0x000000);
-        this.add.image(400, 400, 'minigame_bg').setScale(6.0);
-        this.add.image(400, 400, 'holes').setScale(6.0);
+        this.add.image(400, 400, 'minigame_bg').setScale(7.0);
+        this.add.image(400, 400, 'holes').setScale(7.0);
 
         //Slingshot pos
         this.restX = 150;
@@ -22,13 +22,13 @@ class Minigame extends Phaser.Scene {
         this.holes = this.physics.add.staticGroup();
 
         const holePositions = [
-            { x: 600, y: 220, r: 30 },
-            { x: 580, y: 430, r: 25 },
-            { x: 580, y: 660, r: 40 },
+            { x: 620, y: 200, r: 30 },
+            { x: 600, y: 430, r: 25 },
+            { x: 600, y: 680, r: 40 },
         ];
 
         for (let hole of holePositions) {
-            let circle = this.add.circle(hole.x, hole.y, hole.r, 0xff0000, 0);
+            let circle = this.add.circle(hole.x, hole.y, hole.r, 0xff0000, 0.3);
 
             this.physics.add.existing(circle, true);
             circle.body.setCircle(hole.r);
