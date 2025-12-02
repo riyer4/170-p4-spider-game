@@ -15,6 +15,9 @@ class Load extends Phaser.Scene {
         this.load.spritesheet('web', 'images/web-placeholder.png', { frameWidth: 66, frameHeight: 66 });
         this.load.spritesheet('fly', 'images/fly.png', { frameWidth: 26, frameHeight: 20 });
         this.load.image('blue_square', 'images/blue-square.png');
+        this.load.image('ball', 'images/ball.png');
+        this.load.image('cup', 'images/cup.png');
+        this.load.image('portal', 'images/portal.png');
 
         //audio
         this.load.audio('background1', 'audios/background1.mp3');
