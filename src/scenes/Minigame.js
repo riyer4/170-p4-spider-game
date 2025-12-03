@@ -9,14 +9,27 @@ class Minigame extends Phaser.Scene {
         this.add.image(400, 400, 'holes').setScale(7.0);
 
         //Slingshot pos
-        this.restX = 150;
+        this.restX = 180;
         this.restY = 550;
 
-        this.ball = this.physics.add.sprite(this.restX, this.restY, 'ball').setScale(1.0);
+        this.ball = this.physics.add.sprite(this.restX, this.restY, 'ball').setScale(0.8);
         this.ball.setCollideWorldBounds(true);
         this.ball.setBounce(0.6);
         this.ball.body.setGravityY(0); //No gravity until shot
         this.ball.setImmovable(true); //Ball stays in place before shot
+
+        this.ball.body.setFriction(1, 1);
+        this.ball.body.setDamping(true);
+        this.ball.body.setDrag(0.9);
+        this.ball.setBounce(0.6);
+
+        this.spider = this.add.sprite(this.restX - 70, this.restY, 'spider_eating', 0).setScale(0.6);
+        this.anims.create({
+            key: 'mg_spider_eat',
+            frames: this.anims.generateFrameNumbers('spider_eating', { start: 0, end: 2 }),
+            frameRate: 10,
+            repeat: -1
+        });
 
         // invisible
         this.holes = this.physics.add.staticGroup();
@@ -28,7 +41,7 @@ class Minigame extends Phaser.Scene {
         ];
 
         for (let hole of holePositions) {
-            let circle = this.add.circle(hole.x, hole.y, hole.r, 0xff0000, 0.3);
+            let circle = this.add.circle(hole.x, hole.y, hole.r, 0x000000, 0);
 
             this.physics.add.existing(circle, true);
             circle.body.setCircle(hole.r);
@@ -37,16 +50,21 @@ class Minigame extends Phaser.Scene {
             this.holes.add(circle);
         }
 
-
         this.dragging = false;
         this.shot = false;
+
+        this.dragX = this.restX;
+        this.dragY = this.restY;
+
+        this.slingLine = this.add.graphics();
 
         this.input.on('pointerdown', pointer => {
             if (!this.shot) {
                 //Check if pointer is near the ball
-                const distance = Phaser.Math.Distance.Between(pointer.x, pointer.y, this.ball.x, this.ball.y);
+                const distance = Phaser.Math.Distance.Between(pointer.x, pointer.y, this.restX, this.restY);
                 if (distance < 50) { 
                     this.dragging = true;
+                    this.spider.play('mg_spider_eat');
                 }
             }
         });
@@ -59,8 +77,15 @@ class Minigame extends Phaser.Scene {
                 let distance = Phaser.Math.Distance.Between(this.restX, this.restY, pointer.x, pointer.y);
                 distance = Phaser.Math.Clamp(distance, 0, maxDistance);
 
-                this.ball.x = this.restX + Math.cos(angle) * distance;
-                this.ball.y = this.restY + Math.sin(angle) * distance;
+                this.dragX = this.restX + Math.cos(angle) * distance;
+                this.dragY = this.restY + Math.sin(angle) * distance;
+
+                this.slingLine.clear();
+                this.slingLine.lineStyle(4, 0xffffff, 1);
+                this.slingLine.beginPath();
+                this.slingLine.moveTo(this.restX, this.restY);
+                this.slingLine.lineTo(this.dragX, this.dragY);
+                this.slingLine.strokePath();
             }
         });
 
@@ -69,13 +94,19 @@ class Minigame extends Phaser.Scene {
                 this.dragging = false;
                 this.shot = true;
 
+                this.slingLine.clear();
+
+                this.spider.stop();
+                this.spider.setFrame(0);
+
                 //Enable gravity and make ball movable
                 this.ball.body.setGravityY(600);
                 this.ball.setImmovable(false);
 
                 //Launch the ball based on distance from rest point
-                const dx = this.restX - this.ball.x;
-                const dy = this.restY - this.ball.y;
+                const dx = this.restX - this.dragX;
+                const dy = this.restY - this.dragY;
+
                 this.ball.setVelocity(dx * 5.3, dy * 5.3); 
             }
         });
@@ -85,9 +116,18 @@ class Minigame extends Phaser.Scene {
             this.scene.resume('playScene');
         });
 
+        this.bgSize = 896;
+        this.minX = 400 - this.bgSize / 2;
+        this.maxX = 400 + this.bgSize / 2;
+        this.minY = 400 - this.bgSize / 2;
+        this.maxY = 400 + this.bgSize / 2;
     }
 
     update() {
+
+        this.ball.x = Phaser.Math.Clamp(this.ball.x, this.minX, this.maxX);
+        this.ball.y = Phaser.Math.Clamp(this.ball.y, this.minY, this.maxY);
+
         if (this.shot && (this.ball.body.speed < 200 || this.ball.y > 800 || this.ball.x > 800 || this.ball.x < 0)) {
                 this.scene.stop('minigameScene');
                 this.scene.resume('playScene');
