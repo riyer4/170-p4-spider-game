@@ -28,7 +28,7 @@ class Controls extends Phaser.Scene {
         // Text configuration for instructions
         let textConfig = {
             fontFamily: 'JAi_____',
-            fontSize: '20px',
+            fontSize: '23px',
             color: '#ffffff',
             align: 'center',
             fixedWidth: 0
