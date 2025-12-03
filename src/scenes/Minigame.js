@@ -114,6 +114,8 @@ class Minigame extends Phaser.Scene {
         this.physics.add.overlap(this.ball, this.holes, () => {
             this.scene.stop('minigameScene');
             this.scene.resume('playScene');
+            this.scene.get('playScene').spider.minigameSafeUntil = this.time.now + 1000;
+
         });
 
         this.bgSize = 896;

@@ -1,4 +1,3 @@
-
 class Play extends Phaser.Scene {
     constructor () {
         super("playScene")
@@ -40,6 +39,9 @@ class Play extends Phaser.Scene {
 
         this.physics.world.setBounds(0, 0, this.worldWidth, this.worldHeight)
 
+        this.events.on('wake', () => {
+            this.spider.minigameSafeUntil = this.time.now + 1000;
+        });
     }
 
     update() {

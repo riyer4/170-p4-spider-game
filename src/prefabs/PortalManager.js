@@ -32,6 +32,7 @@ class PortalManager extends Phaser.GameObjects.GameObject {
         //Return the first ball hit that has not already launched the minigame
         for (let ballData of this.balls) {
             if (!ballData.launched &&
+                this.scene.time.now > (spider.minigameSafeUntil || 0) &&
                 Phaser.Geom.Intersects.RectangleToRectangle(spider.getBounds(), ballData.sprite.getBounds())
             ) {
                 ballData.launched = true; //Mark this ball as triggered
@@ -59,13 +60,46 @@ class PortalManager extends Phaser.GameObjects.GameObject {
     }
 
     spawnBall() {
+        const minPortalDistance = 150;
+        const minSpiderDistance = 250;
+
         for (let ballData of this.balls) {
             if (!ballData.sprite.active) {
-                let angle = Phaser.Math.FloatBetween(0, Math.PI * 2);
-                let distance = Phaser.Math.FloatBetween(0, this.scene.web.radius * 0.8);
 
-                let x = this.scene.worldCenterX + Math.cos(angle) * distance;
-                let y = this.scene.worldCenterY + Math.sin(angle) * distance;
+                let valid = false;
+                let x, y;
+
+                while (!valid) {
+
+                    let angle = Phaser.Math.FloatBetween(0, Math.PI * 2);
+                    let distance = Phaser.Math.FloatBetween(0, this.scene.web.radius * 0.8);
+
+                    x = this.scene.worldCenterX + Math.cos(angle) * distance;
+                    y = this.scene.worldCenterY + Math.sin(angle) * distance;
+
+                    const Sx = x - this.scene.spider.x;
+                    const Sy = y - this.scene.spider.y;
+                    const distSpider = Math.sqrt(Sx*Sx + Sy*Sy);
+
+                    if (distSpider < minSpiderDistance) {
+                        continue; 
+                    }
+
+                    let tooClose = false;
+                    for (let other of this.balls) {
+                        if (other.sprite.active && other.sprite !== ballData.sprite) {
+                            const dx = x - other.sprite.x;
+                            const dy = y - other.sprite.y;
+                            const dist = Math.sqrt(dx*dx + dy*dy);
+                            if (dist < minPortalDistance) {
+                                tooClose = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!tooClose) valid = true;
+                }
 
                 ballData.sprite.setPosition(x, y);
                 ballData.sprite.setActive(true);
@@ -76,6 +110,3 @@ class PortalManager extends Phaser.GameObjects.GameObject {
         }
     }
 }
-
-
-
