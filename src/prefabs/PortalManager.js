@@ -45,10 +45,14 @@ class PortalManager extends Phaser.GameObjects.GameObject {
     update(spider) {
         let hitBall = this.checkSpiderCollision(spider);
         if (hitBall) {
-            hitBall.destroy(); 
+            hitBall.destroy(true);
             this.scene.captureSound.play();
             this.scene.scene.pause('playScene'); 
-            this.scene.scene.launch('minigameScene');
+            if (Math.random() < 0.5) {
+                this.scene.scene.launch('minigameScene');
+            } else {
+                this.scene.scene.launch('platformerMinigame');
+            }
             return;
         }
 
@@ -60,8 +64,8 @@ class PortalManager extends Phaser.GameObjects.GameObject {
     }
 
     spawnBall() {
-        const minPortalDistance = 150;
-        const minSpiderDistance = 250;
+        const minPortalDistance = 400;
+        const minSpiderDistance = 500;
 
         for (let ballData of this.balls) {
             if (!ballData.sprite.active) {
@@ -72,7 +76,9 @@ class PortalManager extends Phaser.GameObjects.GameObject {
                 while (!valid) {
 
                     let angle = Phaser.Math.FloatBetween(0, Math.PI * 2);
-                    let distance = Phaser.Math.FloatBetween(0, this.scene.web.radius * 0.8);
+                    let min = this.scene.web.radius * 0.75;
+                    let max = this.scene.web.radius * 0.95;
+                    let distance = Phaser.Math.FloatBetween(min, max);
 
                     x = this.scene.worldCenterX + Math.cos(angle) * distance;
                     y = this.scene.worldCenterY + Math.sin(angle) * distance;
@@ -87,7 +93,7 @@ class PortalManager extends Phaser.GameObjects.GameObject {
 
                     let tooClose = false;
                     for (let other of this.balls) {
-                        if (other.sprite.active && other.sprite !== ballData.sprite) {
+                        if (other.sprite !== ballData.sprite) {
                             const dx = x - other.sprite.x;
                             const dy = y - other.sprite.y;
                             const dist = Math.sqrt(dx*dx + dy*dy);
