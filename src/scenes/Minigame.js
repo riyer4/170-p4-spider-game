@@ -115,6 +115,8 @@ class Minigame extends Phaser.Scene {
             this.scene.stop('minigameScene');
             this.scene.resume('playScene');
             this.scene.get('playScene').spider.minigameSafeUntil = this.time.now + 1000;
+            this.scene.get('playScene').growWeb();
+
 
         });
 
