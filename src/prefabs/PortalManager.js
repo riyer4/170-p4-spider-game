@@ -13,9 +13,7 @@ class PortalManager extends Phaser.GameObjects.GameObject {
 
         for (let i = 0; i < 3; i++) { 
             let angle = Phaser.Math.FloatBetween(0, Math.PI * 2);
-            let minDistance = this.scene.web.radius * 0.9;
-            let maxDistance = this.scene.web.radius * 0.99;
-            let distance = Phaser.Math.FloatBetween(minDistance, maxDistance);
+            let distance = Phaser.Math.FloatBetween(0, this.scene.web.radius);
             
             let x = this.scene.worldCenterX + Math.cos(angle) * distance;
             let y = this.scene.worldCenterY + Math.sin(angle) * distance;
@@ -110,48 +108,14 @@ class PortalManager extends Phaser.GameObjects.GameObject {
     }
 
     spawnBall() {
-        const minPortalDistance = 400;
-        const minSpiderDistance = 500;
-
         for (let ballData of this.balls) {
             if (!ballData.sprite.active) {
-
-                let valid = false;
-                let x, y;
-
-                while (!valid) {
-
-                    let angle = Phaser.Math.FloatBetween(0, Math.PI * 2);
-                    let min = this.scene.web.radius * 0.75;
-                    let max = this.scene.web.radius * 0.95;
-                    let distance = Phaser.Math.FloatBetween(min, max);
-
-                    x = this.scene.worldCenterX + Math.cos(angle) * distance;
-                    y = this.scene.worldCenterY + Math.sin(angle) * distance;
-
-                    const Sx = x - this.scene.spider.x;
-                    const Sy = y - this.scene.spider.y;
-                    const distSpider = Math.sqrt(Sx*Sx + Sy*Sy);
-
-                    if (distSpider < minSpiderDistance) {
-                        continue; 
-                    }
-
-                    let tooClose = false;
-                    for (let other of this.balls) {
-                        if (other.sprite !== ballData.sprite) {
-                            const dx = x - other.sprite.x;
-                            const dy = y - other.sprite.y;
-                            const dist = Math.sqrt(dx*dx + dy*dy);
-                            if (dist < minPortalDistance) {
-                                tooClose = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (!tooClose) valid = true;
-                }
+                // Generate random position within web radius
+                let angle = Phaser.Math.FloatBetween(0, Math.PI * 2);
+                let distance = Phaser.Math.FloatBetween(0, this.scene.web.radius);
+                
+                let x = this.scene.worldCenterX + Math.cos(angle) * distance;
+                let y = this.scene.worldCenterY + Math.sin(angle) * distance;
 
                 ballData.sprite.enableBody(true, x, y, true, true);
                 ballData.sprite.setPosition(x, y);
