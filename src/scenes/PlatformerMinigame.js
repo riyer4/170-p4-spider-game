@@ -135,16 +135,18 @@ class PlatformerMinigame extends Phaser.Scene {
         }
 
         if (this.spider.y < 100) {
+            let playScene = this.scene.get('playScene');
             this.scene.stop('platformerMinigame');
             this.scene.resume('playScene');
-            this.scene.get('playScene').spider.minigameSafeUntil = this.time.now + 1000;
-            this.scene.get('playScene').growWeb();
+            playScene.spider.minigameSafeUntil = playScene.time.now + 1000;
+            playScene.growWeb();
         }
 
         if (this.spider.y > 820) {
+            let playScene = this.scene.get('playScene');
             this.scene.stop('platformerMinigame');
             this.scene.resume('playScene');
-            this.scene.get('playScene').spider.minigameSafeUntil = this.time.now + 1000;
+            playScene.spider.minigameSafeUntil = playScene.time.now + 1000;
         }
     }
 }

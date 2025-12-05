@@ -21,15 +21,8 @@ class Minigame extends Phaser.Scene {
         this.ball.body.setFriction(1, 1);
         this.ball.body.setDamping(true);
         this.ball.body.setDrag(0.9);
-        this.ball.setBounce(0.6);
 
         this.spider = this.add.sprite(this.restX - 70, this.restY, 'spider_eating', 0).setScale(0.6);
-        this.anims.create({
-            key: 'mg_spider_eat',
-            frames: this.anims.generateFrameNumbers('spider_eating', { start: 0, end: 2 }),
-            frameRate: 10,
-            repeat: -1
-        });
 
         // invisible
         this.holes = this.physics.add.staticGroup();
@@ -64,7 +57,7 @@ class Minigame extends Phaser.Scene {
                 const distance = Phaser.Math.Distance.Between(pointer.x, pointer.y, this.restX, this.restY);
                 if (distance < 50) { 
                     this.dragging = true;
-                    this.spider.play('mg_spider_eat');
+                    this.spider.play('eat');
                 }
             }
         });
@@ -112,12 +105,11 @@ class Minigame extends Phaser.Scene {
         });
 
         this.physics.add.overlap(this.ball, this.holes, () => {
+            let playScene = this.scene.get('playScene');
             this.scene.stop('minigameScene');
             this.scene.resume('playScene');
-            this.scene.get('playScene').spider.minigameSafeUntil = this.time.now + 1000;
-            this.scene.get('playScene').growWeb();
-
-
+            playScene.spider.minigameSafeUntil = playScene.time.now + 1000;
+            playScene.growWeb();
         });
 
         this.bgSize = 896;
@@ -128,14 +120,15 @@ class Minigame extends Phaser.Scene {
     }
 
     update() {
-
+        if (!this.ball || !this.ball.body) return;
         this.ball.x = Phaser.Math.Clamp(this.ball.x, this.minX, this.maxX);
         this.ball.y = Phaser.Math.Clamp(this.ball.y, this.minY, this.maxY);
 
         if (this.shot && (this.ball.body.speed < 200 || this.ball.y > 800 || this.ball.x > 800 || this.ball.x < 0)) {
-                this.scene.stop('minigameScene');
-                this.scene.resume('playScene');
-                
+            let playScene = this.scene.get('playScene');
+            this.scene.stop('minigameScene');
+            this.scene.resume('playScene');
+            playScene.spider.minigameSafeUntil = playScene.time.now + 1000;
         }
     }
 }
