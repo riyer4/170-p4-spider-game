@@ -8,6 +8,21 @@ class Minigame extends Phaser.Scene {
         this.add.image(400, 400, 'minigame_bg').setScale(7.0);
         this.add.image(400, 400, 'holes').setScale(7.0);
 
+        // Button configuration without background color
+        let buttonConfig = {
+            fontFamily: 'CapitolCity',
+            fontSize: '30px',
+            color: '#ffffff',
+            align: 'center',
+            fixedWidth: 0
+        }
+
+        // controls button
+        let controlButton = this.add.text(680, 80, 'Controls', buttonConfig).setOrigin(0.5)
+        controlButton.setInteractive({ useHandCursor: true })
+        controlButton.on('pointerover', () => controlButton.setStyle({ color: '#ff901f' }))
+        controlButton.on('pointerout', () => controlButton.setStyle({ color: '#ffffff' }))
+        controlButton.on('pointerdown', () => this.scene.start('MGcontrolsScene'))
         //Slingshot pos
         this.restX = 180;
         this.restY = 550;

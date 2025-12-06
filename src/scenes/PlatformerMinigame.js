@@ -8,6 +8,7 @@ class PlatformerMinigame extends Phaser.Scene {
         this.add.rectangle(400, 400, 800, 800, 0x000000);
         this.add.rectangle(400, 400, 700, 700, 0xffffff);
 
+
         this.keyUP_L = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
         this.keyLEFT_L = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         this.keyDOWN_L = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
@@ -55,6 +56,22 @@ class PlatformerMinigame extends Phaser.Scene {
 
         this.canDoubleJump = true;
         this.spiderState = "idle";
+
+        // Button configuration without background color
+        let buttonConfig = {
+            fontFamily: 'CapitolCity',
+            fontSize: '30px',
+            color: '#000000',
+            align: 'center',
+            fixedWidth: 0
+        }
+
+        // controls button
+        let controlButton2 = this.add.text(680, 80, 'Controls', buttonConfig).setOrigin(0.5)
+        controlButton2.setInteractive({ useHandCursor: true })
+        controlButton2.on('pointerover', () => controlButton2.setStyle({ color: '#ff901f' }))
+        controlButton2.on('pointerout', () => controlButton2.setStyle({ color: '#000000' }))
+        controlButton2.on('pointerdown', () => this.scene.start('PMcontrolsScene'))
     }
 
     update() {
