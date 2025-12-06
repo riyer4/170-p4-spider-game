@@ -35,7 +35,7 @@ class Controls extends Phaser.Scene {
         }
 
         this.add.text(centerX, 200, 'Hold the Arrow Keys to move the spider.', textConfig).setOrigin(0.5);
-        this.add.text(centerX, 300, 'Press the "Z" key for 1s to catch the fly.', textConfig).setOrigin(0.5);
+        this.add.text(centerX, 300, 'Press the "Z" key for 1s to catch flies or to enter portals.', textConfig).setOrigin(0.5);
         this.add.text(centerX, 400, 'Press the "Z" key one more time for 1s to eat the fly.', textConfig).setOrigin(0.5);
     }
 

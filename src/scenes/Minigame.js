@@ -22,7 +22,12 @@ class Minigame extends Phaser.Scene {
         controlButton.setInteractive({ useHandCursor: true })
         controlButton.on('pointerover', () => controlButton.setStyle({ color: '#ff901f' }))
         controlButton.on('pointerout', () => controlButton.setStyle({ color: '#ffffff' }))
-        controlButton.on('pointerdown', () => this.scene.start('MGcontrolsScene'))
+        controlButton.on('pointerdown', () => {
+            this.scene.pause();
+            this.scene.get('playScene').scene.pause();
+            this.scene.launch('MGcontrolsScene', { returnScene: 'minigameScene' });
+        });
+
         //Slingshot pos
         this.restX = 180;
         this.restY = 550;

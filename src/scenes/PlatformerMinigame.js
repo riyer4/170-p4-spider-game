@@ -71,7 +71,11 @@ class PlatformerMinigame extends Phaser.Scene {
         controlButton2.setInteractive({ useHandCursor: true })
         controlButton2.on('pointerover', () => controlButton2.setStyle({ color: '#ff901f' }))
         controlButton2.on('pointerout', () => controlButton2.setStyle({ color: '#000000' }))
-        controlButton2.on('pointerdown', () => this.scene.start('PMcontrolsScene'))
+        controlButton2.on('pointerdown', () => {
+            this.scene.pause();
+            this.scene.get('playScene').scene.pause();
+            this.scene.launch('PMcontrolsScene', { returnScene: 'platformerMinigame' });
+        });
     }
 
     update() {
